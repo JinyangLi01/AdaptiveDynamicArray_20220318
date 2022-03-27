@@ -3,11 +3,11 @@
 #include <chrono>
 #include <random>
 #include <algorithm>
-#include "../../../DataStructures/CountedBtree.h"
-#include "../../../DataStructures/StandardArray.h"
-#include "../../../DataStructures/DynamicArray.h"
-#include "../../../DataStructures/LinkedList.h"
-#include "../../../DataStructures/tiered-vector.h"
+#include "../../../../DataStructures/CountedBtree.h"
+#include "../../../../DataStructures/StandardArray.h"
+#include "../../../../DataStructures/DynamicArray.h"
+#include "../../../../DataStructures/LinkedList.h"
+#include "../../../../DataStructures/tiered-vector.h"
 #include <vector>
 using namespace std;
 using namespace Seq;
@@ -35,9 +35,8 @@ inline std::mt19937& generator() {
 
 // A function to generate integers in the range [min, max]
 int RandomInt(int min, int max) {
-    // std::uniform_int_distribution<int> dist(min, max);
-    // return dist(generator());
-    return (rand() % (max-min+1))+ min;
+    std::uniform_int_distribution<int> dist(min, max);
+    return dist(generator());
 }
 
 int* RangeDistributionRandom( int num, int min, int max) {
@@ -45,7 +44,7 @@ int* RangeDistributionRandom( int num, int min, int max) {
     for (int j = 0; j < num; ++j) {
         n[j] = RandomInt(min, max);
     }
-    random_shuffle(n, n + num);
+    shuffle(n, n + num, generator());
     return n;
 }
 
@@ -162,15 +161,20 @@ int * SARangeQuery(const int * & array, int start, int end) {
 
 
 
-int main() {
-    //var time1, time2 time.Time
-    string filepath[3] = {"swap1K.csv", "swap1KLog.txt"};
+int main(int argc, char** argv) {
+    string filepath[3];
+    filepath[0] = argv[1];
+    filepath[1] = argv[2];
     ofstream finstant, flog, ffinal;
     finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
     flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
+//    filepath[0] = "delete_instant.txt";
+//    filepath[1] = "delete_log.txt";
+//    ofstream finstant, flog, ffinal;
+//    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
+//    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
     finstant<<" ,DA,SA,LL,CBT,TV,VEC"<<endl;
-    long long Tsa = 0, Tda = 0, Tll = 0, Tcbt = 0, Ttv = 0, Tvec = 0;
 
     int iniNum = 100000;
     int danodesize = 20;
@@ -205,10 +209,10 @@ int main() {
         ua++;
     }
 
-    // shuffle(a, a + TotalActions, generator());
+    shuffle(a, a + TotalActions, generator());
     //random_shuffle(&a[DeleteActions+InsertActions], &a[TotalActions]);
     //random_shuffle(&a[0], &a[MoveActions+SwapActions+ReorderActions]);
-    std::shuffle(&a[0], &a[operations], std::mt19937(std::random_device()()));
+    //random_shuffle(&a[0], &a[operations]);
     //int * shortqueryrange = RangeDistributionRandom(, 1, 100);
     int * reorderrange = RangeDistributionRandom(ReorderActions, 1, 100);
     int ir = 0;
@@ -230,7 +234,7 @@ int main() {
     //StandardArray *sa = NewStandardArray(array, iniNum);
     CountedBtree * cbt = NewCBTreeForArray(CbtOrder, iniNum);
     LinkedList * ll = NewLinkedListForArray(m, array, iniNum);
-    Seq::Tiered<int, LayerItr<LayerEnd, Layer<11, Layer<11, Layer<11>>>>> tiered;
+    Seq::Tiered<int, LayerItr<LayerEnd, Layer<22, Layer<22, Layer<22>>>>> tiered;
     tiered.initialize(array, iniNum);
     vector<int> vec;
     vec.reserve(iniNum);
@@ -238,164 +242,167 @@ int main() {
         vec.push_back(array[i]);
     }
     delete []array;
-    int NumSA;
-    std::cout<<"da depth = "<<da->Depth() << endl;
+    int NumSA, NumDA, Numll, NumCBT, NumTV;
+    //da->PrintTree();
+    cout<<"da depth = "<<da->Depth() << endl;
     int depth = 1;
     int numUpdate = 0;
     for (int lt = 0; lt < TotalActions; lt++) {
-        if (lt % 5000 == 0) {
-            std::cout<<"lt = "<<lt;
-            std::cout<<"da depth = "<<da->Depth() << endl;
-            flog<<"lt = "<<lt<<endl;
-            flog<<"da depth = "<<da->Depth() << endl;
-        }
-        if (da->Depth() > depth) {
-            depth++;
-            flog << "numUpdate = " << numUpdate << " da depth = " << depth << endl;
-        }
-        switch (a[lt]) {
+    if (lt % 5000 == 0) {
+        cout<<"lt = "<<lt;
+        cout<<"da depth = "<<da->Depth() << endl;
+        flog<<"lt = "<<lt<<endl;
+        flog<<"da depth = "<<da->Depth() << endl;
+    }
+    if (da->Depth() > depth) {
+        depth++;
+        flog<<"numUpdate = "<<numUpdate<<" da depth = "<<depth<<endl;
+    }
+    switch (a[lt]) {
 
-            case 2: //insert
-            {
-                int pos = RandomInt(1, NowTotalNum);
-                SAInsert(standard_array, ToInsert, pos, NowTotalNum, length_SA);
-                da->Insert(ToInsert, pos);
-                cbt->Insert(ToInsert, pos);
-                ll->Insert(ToInsert, pos);
-                tiered.insert(pos, ToInsert);
-                vec.insert(vec.begin() + pos - 1, ToInsert);
-                ToInsert++;
-                NowTotalNum++;
-                break;
-            }
-            case 3: //delete
-            {
-                int pos = RandomInt(1, NowTotalNum);
-                SADelete(standard_array, pos, NowTotalNum);
-                da->Delete(pos);
-                cbt->Delete(pos);
-                ll->Delete(pos);
-                tiered.remove(pos);
-                vec.erase(vec.begin() + pos - 1);
-                NowTotalNum--;
-                break;
-            }
-            case 4: //reorder
-            {
-                int len = reorderrange[ir];
-                if (len == 0) {
-                    len = 1;
-                }
-                ir++;
-                if (len >= NowTotalNum) {
-                    len = NowTotalNum-1;
-                }
-                int start = RandomInt(1, NowTotalNum - len);
-                int end = start + len - 1;
-                if (end >= NowTotalNum) {
-                    end = NowTotalNum - 1;
-                }
-
-                int * oldArray = new int[len];
-                for (int j = 0; j < len; ++j) {
-                    oldArray[j] = standard_array[start+j];
-                }
-                // sa->RangeQuery(start, end, &NumSA);
-                int * newArray = new int[len];
-                for (int j = 0; j < len; ++j) {
-                    newArray[j] = oldArray[len-j-1];
-                }
-                SAReorder(standard_array, start, end, newArray);
-                da->Reorder(start, end, newArray);
-                cbt->Reorder(start, end, newArray);
-                ll->Reorder(start, end, newArray);
-                tiered.Reorder(start, end, newArray);
-                for (int i = start-1; i <= end-1; ++i) {
-                    vec[i] = newArray[i-start+1];
-                }
-                delete []newArray;
-                delete []oldArray;
-                break;
-            }
-            case 5: //swap
-            {
-                int b[4] = {};
-                for (int & j : b) {
-                    j = RandomInt(1, NowTotalNum);
-                }
-                sort(b, b + 4);
-                if (b[1] == b[2]) {
-                    continue;
-                }
-                int start1 = b[0];
-                int end1 = b[1];
-                int start2 = b[2];
-                int end2 = b[3];
-                SASwap(standard_array, start1, end1, start2, end2, NowTotalNum);
-                da->Swap(start1, end1, start2, end2);
-                cbt->Swap(start1, end1, start2, end2);
-                ll->Swap(start1, end1, start2, end2);
-                tiered.Swap(start1, end1, start2, end2);
-                VectorSwap(vec, start1, end1, start2, end2);
-                break;
-            }
-        }
-
-
-        if ((lt+1)%10000 == 0)
+        case 2: //insert
         {
-            numUpdate ++;
-
-
-            CurOutputNum ++;
-
-            int start1 = 30, end1 = 450, start2 = 620, end2 = 830;
-
-            time1 = timeNow();
-            SASwap(standard_array, start1, end1, start2, end2, NowTotalNum);
-            time2 = timeNow();
-            Tsa += duration(time2-time1);
-
-            time1 = timeNow();
-            da->Swap(start1, end1, start2, end2);
-            time2 = timeNow();
-            Tda += duration(time2-time1);
-
-            time1 = timeNow();
-            ll->Swap(start1, end1, start2, end2);
-            time2 = timeNow();
-            Tll += duration(time2 - time1);
-
-            time1 = timeNow();
-            cbt->Swap(start1, end1, start2, end2);
-            time2 = timeNow();
-            Tcbt += duration(time2 - time1);
-
-            time1 = timeNow();
-            tiered.Swap(start1, end1, start2, end2);
-            time2 = timeNow();
-            Ttv += duration(time2 - time1);
-
-
-            time1 = timeNow();
-            VectorSwap(vec, start1, end1, start2, end2);
-            time2 = timeNow();
-            Tvec += duration(time2 - time1);
-
-            std::cout<<"lt = "<< lt <<" da depth = "<<da->Depth()<<endl;
-            flog<<"lt= "<<lt<<" ll length = "<<ll->NumItem<<endl;
+            int pos = RandomInt(1, NowTotalNum);
+            SAInsert(standard_array, ToInsert, pos, NowTotalNum, length_SA);
+            da->Insert(ToInsert, pos);
+            cbt->Insert(ToInsert, pos);
+            ll->Insert(ToInsert, pos);
+            tiered.insert(pos, ToInsert);
+            vec.insert(vec.begin() + pos - 1, ToInsert);
+            ToInsert++;
+            NowTotalNum++;
+            break;
         }
-        numUpdate++;
-    } //for lt <= loopTime
+        case 3: //delete
+        {
+            int pos = RandomInt(1, NowTotalNum);
+            SADelete(standard_array, pos, NowTotalNum);
+            da->Delete(pos);
+            cbt->Delete(pos);
+            ll->Delete(pos);
+            tiered.remove(pos);
+            vec.erase(vec.begin() + pos - 1);
+            NowTotalNum--;
+            break;
+        }
+        case 4: //reorder
+        {
+            int len = reorderrange[ir];
+            if (len == 0) {
+                len = 1;
+            }
+            ir++;
+            if (len >= NowTotalNum) {
+                len = NowTotalNum-1;
+            }
+            int start = RandomInt(1, NowTotalNum - len);
+            int end = start + len - 1;
+            if (end >= NowTotalNum) {
+                end = NowTotalNum - 1;
+            }
 
-    finstant <<Tda/10 << ","<< Tsa/10<<","<<Tll/10<<","<<Tcbt/10<<","<<Ttv/10<<","<<Tvec/10<<endl;
+            int * oldArray = new int[len];
+            for (int j = 0; j < len; ++j) {
+                oldArray[j] = standard_array[start+j];
+            }
+            // sa->RangeQuery(start, end, &NumSA);
+            int * newArray = new int[len];
+            for (int j = 0; j < len; ++j) {
+                newArray[j] = oldArray[len-j-1];
+            }
+            SAReorder(standard_array, start, end, newArray);
+            da->Reorder(start, end, newArray);
+            cbt->Reorder(start, end, newArray);
+            ll->Reorder(start, end, newArray);
+            tiered.Reorder(start, end, newArray);
+            for (int i = start-1; i <= end-1; ++i) {
+                vec[i] = newArray[i-start+1];
+            }
+            delete []newArray;
+            delete []oldArray;
+            break;
+        }
+        case 5: //swap
+        {
+            int b[4] = {};
+            for (int & j : b) {
+                j = RandomInt(1, NowTotalNum);
+            }
+            sort(b, b + 4);
+            if (b[1] == b[2]) {
+                continue;
+            }
+            int start1 = b[0];
+            int end1 = b[1];
+            int start2 = b[2];
+            int end2 = b[3];
+            SASwap(standard_array, start1, end1, start2, end2, NowTotalNum);
+            da->Swap(start1, end1, start2, end2);
+            cbt->Swap(start1, end1, start2, end2);
+            ll->Swap(start1, end1, start2, end2);
+            tiered.Swap(start1, end1, start2, end2);
+            VectorSwap(vec, start1, end1, start2, end2);
+            break;
+        }
+    }
+
+    if ( (lt+1 <= 10) || ((lt+1<=100) && ((lt+1)%10 == 0)) || ((lt+1<=1000) && ((lt+1)%100 == 0))
+         || ((lt+1<=10000) && ((lt+1)%1000 == 0)) || ((lt+1<=100000) && ((lt+1)%10000 == 0))
+         || ((lt+1<=1000000) && ((lt+1)%100000 == 0))) {
+        numUpdate ++;
+
+        cout<<"ll length: "<<ll->NumItem<<endl;
+        long long Tsa = 0, Tda = 0, Tll = 0, Tcbt = 0, Ttv=0, Tvec = 0;
+        CurOutputNum ++;
+        double fl = (lt+1)*1.0/operations ;
+        finstant << fl << ",";
+
+        int pos = RandomInt(1, NowTotalNum);
+
+        time1 = timeNow();
+        SADelete(standard_array, pos, NowTotalNum);
+        time2 = timeNow();
+        Tsa = duration(time2-time1);
+
+        time1 = timeNow();
+        da->Delete(pos);
+        time2 = timeNow();
+        Tda = duration(time2-time1);
+
+        time1 = timeNow();
+        ll->Delete(pos);
+        time2 = timeNow();
+        Tll = duration(time2 - time1);
+
+        time1 = timeNow();
+        cbt->Delete(pos);
+        time2 = timeNow();
+        Tcbt = duration(time2 - time1);
+
+        time1 = timeNow();
+        tiered.remove(pos);
+        time2 = timeNow();
+        Ttv = duration(time2 - time1);
+
+        time1 = timeNow();
+        vec.erase(vec.begin() + pos - 1);
+        time2 = timeNow();
+        Tvec = duration(time2 - time1);
+
+        finstant <<Tda << ","<< Tsa<<","<<Tll<<","<<Tcbt<<","<<Ttv<<","<<Tvec<<endl;
+        cout<<"lt = "<< lt <<" da depth = "<<da->Depth()<<endl;
+        flog<<"lt= "<<lt<<" ll length = "<<ll->NumItem<<endl;
+
+        NowTotalNum--;
+    }
+    numUpdate++;
+} //for lt <= loopTime
+    //cout<<"da depth = "<<da->Depth() << endl;
     flog<<"da depth = "<<da->Depth() << endl;
     delete []reorderrange;
     delete []a;
-
     flog.close();
     finstant.close();
     return 0;
 }
-
 
