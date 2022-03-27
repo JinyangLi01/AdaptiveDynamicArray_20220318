@@ -160,7 +160,7 @@ void SASwap(int * & array, int start1, int end1, int start2, int end2, int NowTo
     delete []newarray;
 }
 
-int * SARangeQuery(const int * & array, int start, int end) {
+int * SARangeQuery(int * & array, int start, int end) {
     int queryLength = end - start + 1;
     int * qans = new int[queryLength];
     for (int i = start-1; i <= end-1; i++){

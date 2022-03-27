@@ -1,7 +1,3 @@
-//
-// Created by Jinyang Li on 1/10/22.
-//
-
 #include <iostream>
 #include <fstream>
 #include <chrono>
@@ -53,6 +49,7 @@ int* RangeDistributionRandom( int num, int min, int max) {
 }
 
 
+
 int * VectorRangeQuery(vector<int> &vec, int start, int end) {
     int queryLength = end - start + 1;
     int * qans = new int[queryLength];
@@ -61,6 +58,7 @@ int * VectorRangeQuery(vector<int> &vec, int start, int end) {
     }
     return qans;
 }
+
 
 void VectorSwap(vector<int> &vec, int start1, int end1, int start2, int end2)  {
     int len = end2-start1+1;
@@ -87,6 +85,7 @@ void VectorSwap(vector<int> &vec, int start1, int end1, int start2, int end2)  {
     }
     delete []newarray;
 }
+
 
 void SAInsert(int * & array, int ToInsert, int pos, int NumItems, int & Length) {
     if (pos > NumItems) {
@@ -161,7 +160,7 @@ void SASwap(int * & array, int start1, int end1, int start2, int end2, int NowTo
     delete []newarray;
 }
 
-int * SARangeQuery(int * & array, int start, int end) {
+int * SARangeQuery(const int * & array, int start, int end) {
     int queryLength = end - start + 1;
     int * qans = new int[queryLength];
     for (int i = start-1; i <= end-1; i++){
@@ -172,19 +171,20 @@ int * SARangeQuery(int * & array, int start, int end) {
 
 
 
+
 int main(int argc, char** argv) {
     string filepath[3];
-    filepath[0] = argv[1];
-    filepath[1] = argv[2];
-    ofstream finstant, flog, ffinal;
-    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
-    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
-
-//    filepath[0] = "delete_instant.txt";
-//    filepath[1] = "delete_log.txt";
+//    filepath[0] = argv[1];
+//    filepath[1] = argv[2];
 //    ofstream finstant, flog, ffinal;
 //    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
 //    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
+
+    filepath[0] = "pointquery_instant.csv";
+    filepath[1] = "pointquery_log.txt";
+    ofstream finstant, flog, ffinal;
+    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
+    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
     finstant<<" ,DA,SA,LL,CBT,TV,VEC"<<endl;
 
     int iniNum = 100000;
@@ -357,6 +357,8 @@ int main(int argc, char** argv) {
             }
         }
 
+
+
         if ( (lt+1 <= 10) || ((lt+1<=100) && ((lt+1)%10 == 0)) || ((lt+1<=1000) && ((lt+1)%100 == 0))
              || ((lt+1<=10000) && ((lt+1)%1000 == 0)) || ((lt+1<=100000) && ((lt+1)%10000 == 0))
              || ((lt+1<=1000000) && ((lt+1)%100000 == 0))) {
@@ -367,41 +369,46 @@ int main(int argc, char** argv) {
             CurOutputNum ++;
             double fl = (lt+1)*1.0/operations ;
             finstant << fl << ",";
+            int qans;
+            int repeatNum = 1;
 
-            int pos = RandomInt(1, NowTotalNum);
-            int start1 = 3000, end1 = 10000, start2 = 45000, end2 = 82000;
+            for (int k = 0; k < repeatNum; ++k) {
+                int pos = RandomInt(1, NowTotalNum);
 
-            time1 = timeNow();
-            SASwap(standard_array, start1, end1, start2, end2, NowTotalNum);
-            time2 = timeNow();
-            Tsa = duration(time2-time1);
+                time1 = timeNow();
+                qans = standard_array[pos-1];
+                time2 = timeNow();
+                Tsa += duration(time2 - time1);
 
-            time1 = timeNow();
-            da->Swap(start1, end1, start2, end2);
-            time2 = timeNow();
-            Tda = duration(time2-time1);
+                time1 = timeNow();
+                qans = da->Query(pos);
+                time2 = timeNow();
+                Tda += duration(time2 - time1);
 
-            time1 = timeNow();
-            ll->Swap(start1, end1, start2, end2);
-            time2 = timeNow();
-            Tll = duration(time2 - time1);
+                time1 = timeNow();
+                qans = ll->Query(pos);
+                time2 = timeNow();
+                Tll += duration(time2 - time1);
 
-            time1 = timeNow();
-            cbt->Swap(start1, end1, start2, end2);
-            time2 = timeNow();
-            Tcbt = duration(time2 - time1);
+                time1 = timeNow();
+                qans = cbt->Query(pos);
+                time2 = timeNow();
+                Tcbt += duration(time2 - time1);
 
-            time1 = timeNow();
-            tiered.Swap(start1, end1, start2, end2);
-            time2 = timeNow();
-            Ttv = duration(time2 - time1);
+                time1 = timeNow();
+                qans = tiered.Query(pos);
+                time2 = timeNow();
+                Ttv += duration(time2 - time1);
 
-            time1 = timeNow();
-            VectorSwap(vec, start1, end1, start2, end2);
-            time2 = timeNow();
-            Tvec = duration(time2 - time1);
+                time1 = timeNow();
+                qans = vec[pos - 1];
+                // vec.insert(vec.begin() + pos - 1, ToInsert);
+                time2 = timeNow();
+                Tvec += duration(time2 - time1);
+            }
+            finstant <<Tda/repeatNum << ","<< Tsa/repeatNum<<","<<Tll/repeatNum<<","<<Tcbt/repeatNum<<
+            ","<<Ttv/repeatNum << "," << Tvec/repeatNum << endl;
 
-            finstant <<Tda << ","<< Tsa<<","<<Tll<<","<<Tcbt<<","<<Ttv<<","<<Tvec<<endl;
             cout<<"lt = "<< lt <<" da depth = "<<da->Depth()<<endl;
             flog<<"lt= "<<lt<<" ll length = "<<ll->NumItem<<endl;
 
