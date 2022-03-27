@@ -94,7 +94,7 @@ void SAInsert(int * & array, int ToInsert, int pos, int NumItems, int & Length) 
     if (NumItems +1 > Length) {
         int oldLen = Length;
         int newLen = Length * 2;
-        // printf("SAInsert, allocate %d\n", newLen+1);
+        printf("SAInsert, allocate %d\n", newLen+1);
         int * newarray = new int[newLen + 1];
         int j = 0;
         for (int i = 0; i < NumItems + 1; ++i) {
