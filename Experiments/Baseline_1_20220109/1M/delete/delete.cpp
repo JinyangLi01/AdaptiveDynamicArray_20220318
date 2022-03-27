@@ -181,7 +181,7 @@ int main(int argc, char** argv) {
 //    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
 //    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
-    filepath[0] = "instant.txt";
+    filepath[0] = "instant.csv";
     filepath[1] = "log.txt";
     ofstream finstant, flog, ffinal;
     finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
