@@ -179,8 +179,8 @@ int main(int argc, char** argv) {
 //    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
 //    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
-    filepath[0] = "reorder_instant.csv";
-    filepath[1] = "reorder_log.txt";
+    filepath[0] = "query_instant.csv";
+    filepath[1] = "query_log.txt";
     ofstream finstant, flog, ffinal;
     finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
     flog.open(filepath[1], ios::out | ios::in | ios::trunc);
