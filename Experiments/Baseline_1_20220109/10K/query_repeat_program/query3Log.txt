@@ -1,0 +1,32 @@
+lt = 0
+da depth = 1
+lt= 0 ll length = 1000
+lt= 1 ll length = 1001
+lt= 2 ll length = 1001
+lt= 3 ll length = 1002
+lt= 4 ll length = 1002
+lt= 5 ll length = 1002
+lt= 6 ll length = 1001
+lt= 7 ll length = 1001
+lt= 8 ll length = 1002
+lt= 9 ll length = 1001
+numUpdate = 25 da depth = 2
+lt= 19 ll length = 1003
+lt= 29 ll length = 1003
+lt= 39 ll length = 1004
+lt= 49 ll length = 1004
+lt= 59 ll length = 1004
+lt= 69 ll length = 1001
+lt= 79 ll length = 999
+lt= 89 ll length = 995
+lt= 99 ll length = 998
+lt= 199 ll length = 1001
+lt= 299 ll length = 1003
+lt= 399 ll length = 1005
+lt= 499 ll length = 1002
+lt= 599 ll length = 999
+lt= 699 ll length = 1010
+lt= 799 ll length = 1013
+lt= 899 ll length = 1000
+lt= 999 ll length = 1000
+da depth = 2

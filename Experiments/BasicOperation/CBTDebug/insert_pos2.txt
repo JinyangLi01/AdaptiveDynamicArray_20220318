@@ -1,0 +1,11 @@
+xxxx
+lt=0, ToInsert=41, pos=8
+lt=3, ToInsert=42, pos=25
+lt=5, ToInsert=43, pos=38
+lt=7, ToInsert=44, pos=38
+lt=10, ToInsert=45, pos=16
+lt=12, ToInsert=46, pos=23
+lt=15, ToInsert=47, pos=26
+lt=18, ToInsert=48, pos=8
+lt=22, ToInsert=49, pos=25
+lt=25, ToInsert=50, pos=3

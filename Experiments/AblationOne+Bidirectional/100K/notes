@@ -1,0 +1,28 @@
+danodesize = 20
+lt = 0
+da depth = 1
+lt = 1000
+da depth = 3
+lt = 2000
+da depth = 3
+lt = 3000
+da depth = 4
+lt = 4000
+da depth = 4
+lt = 5000
+da depth = 4
+
+
+when danodesize = 10
+da depth = 1
+lt = 0
+da depth = 1
+lt = 1000
+da depth = 4
+lt = 2000
+da depth = 4
+lt = 3000
+da depth = 5
+
+
+

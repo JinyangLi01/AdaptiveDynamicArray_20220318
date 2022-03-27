@@ -1,0 +1,8 @@
+lt = 0
+da depth = 1
+numUpdate = 5 da depth = 2
+numUpdate = 38 da depth = 3
+numUpdate = 301 da depth = 4
+numUpdate = 2527 da depth = 5
+lt = 5000
+da depth = 5

@@ -1,0 +1,16 @@
+tableawards5 , wl3.cpp, tiered <500>, swap(pos, +600, +1000, +2500)
+insert, ADA, SA, CBT, LL, TV
+asyn,8730,1326317,8440,2686280,9485
+syn,8730,1326317,8440,2686280,9485
+delete, ADA, SA, CBT, LL, TV
+asyn,7135,1049173,7340,2303035,7555
+syn,7135,1049173,7340,2303035,7555
+reorder, ADA, SA, CBT, LL, TV
+no framework needed,900,8600,4700,2600,3400
+swap, ADA, SA, CBT, LL, TV
+no framework needed,4400,13500,409906,7700,22300
+query, ADA, SA, CBT, LL, TV
+prefetching,8806,4640,26857,6281,9604
+non-prefetching,3475827,3471661,3493877,3473302,3476625
+
+
