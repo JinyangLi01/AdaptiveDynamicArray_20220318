@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -43,7 +43,7 @@ execution_time5 = list()
 execution_time6 = list()
 
 
-input_path = r'avg.csv'
+input_path = r'insert_instant.csv'
 input_file = open(input_path, "r")
 
 
