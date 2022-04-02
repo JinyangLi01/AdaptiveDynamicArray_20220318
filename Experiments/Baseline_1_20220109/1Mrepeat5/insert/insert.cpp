@@ -52,9 +52,19 @@ int* RangeDistributionRandom( int num, int min, int max) {
     return n;
 }
 
+int * VectorRangeQuery(vector<int> &vec, int start, int end) {
+    int queryLength = end - start + 1;
+    int * qans = new int[queryLength];
+    for (int i = start-1; i <= end-1; i++){
+        qans[i-start+1] = vec[i];
+    }
+    return qans;
+}
+
+
 void VectorSwap(vector<int> &vec, int start1, int end1, int start2, int end2)  {
     int len = end2-start1+1;
-    int * newarray = new int[len];// make([]int, len)
+    int * newarray = new int[len+5];// make([]int, len)
     int in = 0;
     for (int k = start2-1; k <= end2-1; k ++) {
         newarray[in] = vec[k];
@@ -78,65 +88,18 @@ void VectorSwap(vector<int> &vec, int start1, int end1, int start2, int end2)  {
     delete []newarray;
 }
 
-void VectorMove(vector<int> &vec, int NumItems, int start, int end, int des)  {
-    if (des > NumItems) {
-        des = NumItems;
-    } else if (des >= start && des <= end+1) {
-        return;
-    }
 
-    if (des < start) {
-        int len = end-des+1;
-        int * newarray = new int[len];
-        int in = 0;
-        for (int k = start-1; k <= end-1; k ++) {
-            newarray[in] = vec[k];
-            in++;
-        }
-        for (int k = des-1; k < start-1; k ++) {
-            newarray[in] = vec[k];
-            in++;
-        }
-        in = 0;
-        for (int k = des-1; k <= end-1; k ++) {
-            vec[k] = newarray[in];
-            in++;
-        }
-        delete []newarray;
-        return;
-    } else {
-        int len = des-start;
-        int * newarray = new int[len];
-        int in = 0;
-        for (int k = end; k < des-1; k ++) {
-            newarray[in] = vec[k];
-            in++;
-        }
-        for (int k = start-1; k <= end-1; k ++) {
-            newarray[in] = vec[k];
-            in++;
-        }
-        in=0;
-        for (int k = start-1; k < des-1; k ++) {
-            vec[k] = newarray[in];
-            in++;
-        }
-        delete []newarray;
-        return;
-    }
-}
-
-void SAInsert(int * & array, int ToInsert, int pos, int NumItems, int Length) {
+void SAInsert(int * & array, int ToInsert, int pos, int NumItems, int & Length) {
     if (pos > NumItems) {
         pos = NumItems;
     }
-    if (NumItems > Length) {
+    if (NumItems +1 > Length) {
         int oldLen = Length;
         int newLen = Length * 2;
+        // printf("SAInsert, allocate %d\n", newLen+1);
         int * newarray = new int[newLen + 1];
-        int newNumItem = oldLen + 1;
         int j = 0;
-        for (int i = 0; i < newNumItem; ++i) {
+        for (int i = 0; i < NumItems + 1; ++i) {
             if (i == pos-1) {
                 continue;
             }
@@ -146,12 +109,12 @@ void SAInsert(int * & array, int ToInsert, int pos, int NumItems, int Length) {
         newarray[pos-1] = ToInsert;
         delete []array;
         array = newarray;
-        NumItems = newNumItem;
+        NumItems += 1;
         Length = newLen;
         return;
     }
     int itemToStore = ToInsert;
-    for (int i = pos-1; i <= NumItems-1; ++i) {
+    for (int i = pos-1; i <= NumItems; ++i) {
         int tmp = array[i];
         array[i] = itemToStore;
         itemToStore = tmp;
@@ -173,9 +136,9 @@ void SAReorder(int * & array, int start, int end, const int * newID) {
     }
 }
 
-void SASwap(int * & array, int start1, int end1, int start2, int end2) {
+void SASwap(int * & array, int start1, int end1, int start2, int end2, int NowTotalNum) {
     int len = end2-start1+1;
-    int * newarray = new int[len];// make([]int, len)
+    int * newarray = new int[len+5];// make([]int, len)
     int in = 0;
     for (int k = start2-1; k <= end2-1; k ++) {
         newarray[in] = array[k];
@@ -199,7 +162,7 @@ void SASwap(int * & array, int start1, int end1, int start2, int end2) {
     delete []newarray;
 }
 
-int * SARangeQuery(const int * & array, int start, int end) {
+int * SARangeQuery(int * & array, int start, int end) {
     int queryLength = end - start + 1;
     int * qans = new int[queryLength];
     for (int i = start-1; i <= end-1; i++){
@@ -207,6 +170,7 @@ int * SARangeQuery(const int * & array, int start, int end) {
     }
     return qans;
 }
+
 
 
 
@@ -223,6 +187,7 @@ int main(int argc, char** argv) {
 //    ofstream finstant, flog, ffinal;
 //    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
 //    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
+//
     finstant<<" ,DA,SA,LL,TV,VEC"<<endl;
 
     int iniNum = 1000000;
@@ -310,7 +275,7 @@ int main(int argc, char** argv) {
             case 2: //insert
             {
                 int pos = RandomInt(1, NowTotalNum);
-                SAInsert(standard_array, ToInsert, pos, iniNum, length_SA);
+                SAInsert(standard_array, ToInsert, pos, NowTotalNum, length_SA);
                 da->Insert(ToInsert, pos);
                 ll->Insert(ToInsert, pos);
                 tiered.insert(pos, ToInsert);
@@ -322,7 +287,7 @@ int main(int argc, char** argv) {
             case 3: //delete
             {
                 int pos = RandomInt(1, NowTotalNum);
-                SADelete(standard_array, pos, iniNum);
+                SADelete(standard_array, pos, NowTotalNum);
                 da->Delete(pos);
                 ll->Delete(pos);
                 tiered.remove(pos);
@@ -330,10 +295,12 @@ int main(int argc, char** argv) {
                 NowTotalNum--;
                 break;
             }
-
             case 4: //reorder
             {
                 int len = reorderrange[ir];
+                if (len == 0) {
+                    len = 1;
+                }
                 ir++;
                 if (len >= NowTotalNum) {
                     len = NowTotalNum-1;
@@ -366,19 +333,19 @@ int main(int argc, char** argv) {
             }
             case 5: //swap
             {
-                int a[4] = {};
-                for (int & j : a) {
+                int b[4] = {};
+                for (int & j : b) {
                     j = RandomInt(1, NowTotalNum);
                 }
-                sort(a, a+4);
-                if (a[1] == a[2]) {
+                sort(b, b + 4);
+                if (b[1] == b[2]) {
                     continue;
                 }
-                int start1 = a[0];
-                int end1 = a[1];
-                int start2 = a[2];
-                int end2 = a[3];
-                SASwap(standard_array, start1, end1, start2, end2);
+                int start1 = b[0];
+                int end1 = b[1];
+                int start2 = b[2];
+                int end2 = b[3];
+                SASwap(standard_array, start1, end1, start2, end2, NowTotalNum);
                 da->Swap(start1, end1, start2, end2);
                 ll->Swap(start1, end1, start2, end2);
                 tiered.Swap(start1, end1, start2, end2);
@@ -401,7 +368,7 @@ int main(int argc, char** argv) {
             int pos = RandomInt(1, NowTotalNum);
 
             time1 = timeNow();
-            SAInsert(standard_array, ToInsert, pos, iniNum, length_SA);
+            SAInsert(standard_array, ToInsert, pos, NowTotalNum, length_SA);
             time2 = timeNow();
             Tsa = duration(time2-time1);
 
@@ -429,7 +396,7 @@ int main(int argc, char** argv) {
             cout<<"lt = "<< lt <<" da depth = "<<da->Depth()<<endl;
             flog<<"lt= "<<lt<<" ll length = "<<ll->NumItem<<endl;
 
-            NowTotalNum--;
+            NowTotalNum++;
         }
         numUpdate++;
     } //for lt <= loopTime
