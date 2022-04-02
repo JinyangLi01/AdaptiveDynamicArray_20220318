@@ -364,6 +364,7 @@ int main(int argc, char** argv) {
         finstant << fl << ",";
 
         int pos = RandomInt(1, NowTotalNum);
+        printf("delete %d\n", pos);
 
         time1 = timeNow();
         SADelete(standard_array, pos, NowTotalNum);
