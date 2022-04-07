@@ -189,6 +189,7 @@ int main(int argc, char** argv) {
 //
     finstant<<" ,DA,SA,LL,TV,VEC"<<endl;
 
+
     int iniNum = 10000000;
     int danodesize = 200;
     int m = 2000;  //for linked list
