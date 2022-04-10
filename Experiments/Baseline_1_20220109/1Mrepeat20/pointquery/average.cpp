@@ -67,7 +67,7 @@ void readCSV(int i, const char * name) {
 
 int main(int argc, char** argv) {
     readColNumTitle(1, argv[1]);
-    for (int i = 1; i <= 5; ++i) {
+    for (int i = 1; i <= 20; ++i) {
         readCSV(i, argv[1]);
     }
     ofstream fout;
