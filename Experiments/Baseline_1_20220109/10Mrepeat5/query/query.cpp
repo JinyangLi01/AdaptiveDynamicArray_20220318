@@ -261,6 +261,7 @@ int main(int argc, char** argv) {
     cout<<"da depth = "<<da->Depth() << endl;
     int depth = 1;
     int numUpdate = 0;
+    cout << "iniNum = " << iniNum << endl;
     for (int lt = 0; lt < TotalActions; lt++) {
         if (lt % 5000 == 0) {
             cout<<"lt = "<<lt;
