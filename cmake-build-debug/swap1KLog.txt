@@ -1,8 +1,38 @@
 lt = 0
 da depth = 1
-numUpdate = 5 da depth = 2
-numUpdate = 38 da depth = 3
-numUpdate = 301 da depth = 4
-numUpdate = 2527 da depth = 5
+numUpdate = 7 da depth = 2
+numUpdate = 45 da depth = 3
+numUpdate = 285 da depth = 4
+numUpdate = 1965 da depth = 5
 lt = 5000
+da depth = 5
+lt= 9999 ll length = 99976
+lt = 10000
+da depth = 5
+lt = 15000
+da depth = 5
+lt= 19999 ll length = 99877
+lt = 20000
+da depth = 5
+lt = 25000
+da depth = 5
+lt= 29999 ll length = 99856
+lt = 30000
+da depth = 5
+lt = 35000
+da depth = 5
+lt= 39999 ll length = 99924
+lt = 40000
+da depth = 5
+lt = 45000
+da depth = 5
+lt= 49999 ll length = 99914
+lt = 50000
+da depth = 5
+lt = 55000
+da depth = 5
+lt= 59999 ll length = 99975
+lt = 60000
+da depth = 5
+lt = 65000
 da depth = 5
