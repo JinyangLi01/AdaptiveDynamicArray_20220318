@@ -513,6 +513,10 @@ int DynamicArray::GetFanout() const {
     return Capacity;
 }
 
+int DynamicArray::GetNumItems() {
+    return NumItems;
+}
+
 void DynamicArray::insertMulKeysIntoLeaf(int * keysToInsert, NodeDA ** pointersToInsert,
                                          int numKeysToInsert, NodeDA * toLeaf, int toIndex) {
     int newNumKeys = numKeysToInsert + toLeaf->NumOfKeys;

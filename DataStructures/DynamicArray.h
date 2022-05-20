@@ -172,6 +172,9 @@ public:
      */
     int GetFanout() const;
 
+
+    int GetNumItems();
+
 private:
     int NumItems; // total number of items
     int Capacity; // fanout of a node
