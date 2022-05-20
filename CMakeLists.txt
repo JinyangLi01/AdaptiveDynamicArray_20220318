@@ -681,7 +681,7 @@ add_executable(CBTdebug3
         DataStructures/StandardArray.cpp
         DataStructures/StandardArray.h
         DataStructures/tiered-vector.h
-        Experiments/BasicOperation/CBTDebug/debug3.cpp
+        Experiments/TroubleShooting/CBTDebug/debug3.cpp
         )
 
 
@@ -699,7 +699,7 @@ add_executable(CBTdebug4
         DataStructures/StandardArray.cpp
         DataStructures/StandardArray.h
         DataStructures/tiered-vector.h
-        Experiments/BasicOperation/CBTDebug/debug4.cpp
+        Experiments/TroubleShooting/CBTDebug/debug4.cpp
         )
 
 
@@ -718,7 +718,7 @@ add_executable(CBTdebug6
         DataStructures/StandardArray.cpp
         DataStructures/StandardArray.h
         DataStructures/tiered-vector.h
-        Experiments/BasicOperation/CBTDebug/debug6.cpp
+        Experiments/TroubleShooting/CBTDebug/debug6.cpp
         )
 
 
@@ -737,10 +737,49 @@ add_executable(CBTdebugswap1
         DataStructures/StandardArray.cpp
         DataStructures/StandardArray.h
         DataStructures/tiered-vector.h
-        Experiments/BasicOperation/CBTDebug/swap1.cpp
+        Experiments/TroubleShooting/CBTDebug/swap1.cpp
         )
 
 
+
+
+
+add_executable(Baselineinsert
+        DataStructures/CountedBtree.cpp
+        DataStructures/CountedBtree.h
+        DataStructures/DAnolimit.cpp
+        DataStructures/DAnolimit.h
+        DataStructures/DAstatic.cpp
+        DataStructures/DAstatic.h
+        DataStructures/DynamicArray.cpp
+        DataStructures/DynamicArray.h
+        DataStructures/LinkedList.cpp
+        DataStructures/LinkedList.h
+        DataStructures/StandardArray.cpp
+        DataStructures/StandardArray.h
+        DataStructures/tiered-vector.h
+        Experiments/Baseline_1_20220109/100K/insert/insert.cpp
+        )
+
+
+
+
+add_executable(LL1
+        DataStructures/CountedBtree.cpp
+        DataStructures/CountedBtree.h
+        DataStructures/DAnolimit.cpp
+        DataStructures/DAnolimit.h
+        DataStructures/DAstatic.cpp
+        DataStructures/DAstatic.h
+        DataStructures/DynamicArray.cpp
+        DataStructures/DynamicArray.h
+        DataStructures/LinkedList.cpp
+        DataStructures/LinkedList.h
+        DataStructures/StandardArray.cpp
+        DataStructures/StandardArray.h
+        DataStructures/tiered-vector.h
+        Experiments/TroubleShooting/LLmemory/LL1.cpp
+        )
 
 
 
