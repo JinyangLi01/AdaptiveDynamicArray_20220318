@@ -8,7 +8,7 @@ typedef std::chrono::high_resolution_clock::time_point TimeVar;
 #define timeNow() std::chrono::high_resolution_clock::now()
 
 LinkedList* NewLinkedListForArray(int m_, int * array, int num) {
-    LinkedList * ll = new LinkedList(m_, array, num);
+    auto * ll = new LinkedList(m_, array, num);
     return ll;
 }
 
@@ -17,7 +17,9 @@ ListMember::ListMember(int ID, ListMember * next_) {
     next = next_;
 }
 
-ListMember::~ListMember() = default;
+ListMember::~ListMember() {
+    printf("ListMember deleted ID = %d\n", rowID);
+}
 
 LinkedList::LinkedList(int m_) {
     startList = nullptr;
@@ -153,14 +155,14 @@ ListMember* LinkedList::FindBlock(int pos) const {
 
 void LinkedList::Insert(int newID, int pos) {
     if (pos == 1) {
-        ListMember * newStart = new ListMember(newID, startList);
+        auto * newStart = new ListMember(newID, startList);
         startList = newStart;
         NumItem++;
         NewArray();
         return;
     }
     ListMember * pre = FindBlock(pos-1);
-    ListMember * newBlock = new ListMember(newID, pre->next);
+    auto * newBlock = new ListMember(newID, pre->next);
     pre->next = newBlock;
     NumItem++;
     NewArray();
@@ -193,7 +195,7 @@ void LinkedList::NewArray() {
         ArrayLen++;
     }
     delete []array;
-    array = new ListMember *[ArrayLen];// make([]interface{}, ArrayLen);
+    array = new ListMember *[ArrayLen];
     int ai = 0;
     for (int i = 0; i < NumItem; i ++) {
         if (i % m == 0) {
@@ -218,6 +220,9 @@ void LinkedList::Reorder(int start, int end, const int * newIDs) const {
 void LinkedList::Swap(int start1, int end1, int start2, int end2) const {
     int tmp;
     int * r0 = RangeQuery(start1, end2, &tmp);
+    if (r0 == nullptr) {
+        return;
+    }
     int len1 = end2-start2+1;
     int len2 = start2-end1-1;
     int len3 = end1-start1+1;
@@ -251,6 +256,9 @@ void LinkedList::SwapTimeAna(int start1, int end1, int start2, int end2) const {
     int tmp;
     TimeVar time1 = timeNow();
     int * r0 = RangeQuery(start1, end2, &tmp);
+    if (r0 == nullptr) {
+        return;
+    }
     TimeVar time2 = timeNow();
     cout<<"rangequery "<<durationNS(time2-time1);
     int len1 = end2-start2+1;
