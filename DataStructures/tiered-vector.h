@@ -1279,6 +1279,7 @@ namespace Seq
             //drawTree();
             //INODE* node = (INODE*) root;
             expand((size_t)root, 0, allEle, realSize,0);
+            delete []allEle;
             /*
             printf("after expansion\n");
             drawTree();
