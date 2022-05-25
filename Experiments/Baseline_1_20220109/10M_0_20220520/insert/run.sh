@@ -6,4 +6,3 @@ make
 #./insert/insert insert4.csv insert4Log.txt
 #./insert/insert insert5.csv insert5Log.txt
 ./insert/average insert
-python3 ./insert/fig.py

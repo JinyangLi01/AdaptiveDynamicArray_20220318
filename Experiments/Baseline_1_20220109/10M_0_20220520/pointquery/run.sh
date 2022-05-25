@@ -7,4 +7,3 @@ make
 #./pointquery/pointquery pointquery4.csv pointquery4Log.txt
 #./pointquery/pointquery pointquery5.csv pointquery5Log.txt
 ./pointquery/average pointquery
-python3 ./pointquery/fig.py

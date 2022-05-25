@@ -6,4 +6,3 @@ make
 #./reorder/reorder reorder4.csv reorder4Log.txt
 #./reorder/reorder reorder5.csv reorder5Log.txt
 ./reorder/average reorder
-python3 ./reorder/fig.py

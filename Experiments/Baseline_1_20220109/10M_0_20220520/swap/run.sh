@@ -6,4 +6,4 @@ make
 #./swap/swap swap4.csv swap4Log.txt
 #./swap/swap swap5.csv swap5Log.txt
 ./swap/average swap
-python3 ./swap/fig.py
+
