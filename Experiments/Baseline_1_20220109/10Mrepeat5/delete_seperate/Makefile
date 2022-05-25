@@ -1,4 +1,4 @@
-all: deleteLL
+all: deleteLL deleteTV
 
 # deleteSA: deleteSA.cpp 
 # 	g++ -std=c++11 ../../../../DataStructures/StandardArray.cpp  deleteSA.cpp -o deleteSA
@@ -13,6 +13,11 @@ all: deleteLL
 
 deleteLL: deleteLL.cpp 
 	g++ -std=c++11  ../../../../DataStructures/LinkedList.cpp  deleteLL.cpp -o deleteLL
+
+
+
+deleteTV: deleteTV.cpp 
+	g++ -std=c++11  ../../../../DataStructures/LinkedList.cpp  deleteTV.cpp -o deleteTV
 
 
 

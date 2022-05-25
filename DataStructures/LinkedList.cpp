@@ -18,7 +18,7 @@ ListMember::ListMember(int ID, ListMember * next_) {
 }
 
 ListMember::~ListMember() {
-    printf("ListMember deleted ID = %d\n", rowID);
+    // printf("ListMember deleted ID = %d\n", rowID);
 }
 
 LinkedList::LinkedList(int m_) {

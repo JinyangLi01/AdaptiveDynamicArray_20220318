@@ -3,10 +3,10 @@
 #include <chrono>
 #include <random>
 #include <algorithm>
-#include "../../../../DataStructures/LinkedList.h"
+#include "../../../../DataStructures/tiered-vector.h"
 #include <vector>
 using namespace std;
-// using namespace Seq;
+using namespace Seq;
 typedef std::chrono::high_resolution_clock::time_point TimeVar;
 #define duration(a) std::chrono::duration_cast<std::chrono::nanoseconds>(a).count()
 #define timeNow() std::chrono::high_resolution_clock::now()
@@ -166,6 +166,8 @@ int * SARangeQuery(int * & array, int start, int end) {
 }
 
 
+
+
 int main(int argc, char** argv) {
     string filepath[3];
     // filepath[0] = argv[1];
@@ -174,13 +176,14 @@ int main(int argc, char** argv) {
     // finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
     // flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
-   filepath[0] = "deleteLL.csv";
-   filepath[1] = "deleteLLLog.txt";
+   filepath[0] = "deleteTV.csv";
+   filepath[1] = "deleteTVLog.txt";
    ofstream finstant, flog, ffinal;
    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
     finstant<<" ,DA,SA,LL,TV,VEC"<<endl;
+
 
     int iniNum = 10000000;
     int danodesize = 200;
@@ -230,15 +233,8 @@ int main(int argc, char** argv) {
     for (int i = 0; i < iniNum; ++i) {
         array[i] = i+1;
     }
-
-    int * standard_array = new int[iniNum];
-    for (int i = 0; i < iniNum; i ++) {
-        standard_array[i] = array[i];
-    }
-    int length_SA = iniNum;
-    LinkedList * ll = NewLinkedListForArray(m, array, iniNum);
-    
-
+    Seq::Tiered<int, LayerItr<LayerEnd, Layer<150, Layer<150, Layer<150>>>>> tiered;
+    tiered.initialize(array, iniNum);
     delete []array;
     int NumSA, NumDA, Numll, NumCBT, NumTV;
     int depth = 1;
@@ -252,7 +248,7 @@ int main(int argc, char** argv) {
         case 2: //insert
         {
             int pos = RandomInt(1, NowTotalNum);
-            ll->Insert(ToInsert, pos);
+            tiered.insert(pos, ToInsert);
             ToInsert++;
             NowTotalNum++;
             break;
@@ -260,7 +256,7 @@ int main(int argc, char** argv) {
         case 3: //delete
         {
             int pos = RandomInt(1, NowTotalNum);
-            ll->Delete(pos);
+            tiered.remove(pos);
             NowTotalNum--;
             break;
         }
@@ -279,20 +275,22 @@ int main(int argc, char** argv) {
             if (end >= NowTotalNum) {
                 end = NowTotalNum - 1;
             }
-            int num = 0;
 
-            int * oldArray = ll->RangeQuery(start, end, &num);
+            int num = 0;
+            int * oldArray = tiered.RangeQuery(start, end, num);
+
             // sa->RangeQuery(start, end, &NumSA);
             int * newArray = new int[len];
             for (int j = 0; j < len; ++j) {
                 newArray[j] = oldArray[len-j-1];
             }
-            ll->Reorder(start, end, newArray);
+
+            tiered.Reorder(start, end, newArray);
             delete []newArray;
             delete []oldArray;
             break;
         }
-        case 5: //swap leaks happens here!!??
+        case 5: //swap
         {
             int b[4] = {};
             for (int & j : b) {
@@ -306,7 +304,7 @@ int main(int argc, char** argv) {
             int end1 = b[1];
             int start2 = b[2];
             int end2 = b[3];
-            ll->Swap(start1, end1, start2, end2);
+            tiered.Swap(start1, end1, start2, end2);
             break;
         }
     }
@@ -325,12 +323,12 @@ int main(int argc, char** argv) {
         // printf("delete %d\n", pos);
 
         time1 = timeNow();
-        ll->Delete(pos);
+        tiered.remove(pos);
         time2 = timeNow();
-        Tsa = duration(time2-time1);
+        Tda = duration(time2-time1);
 
 
-        finstant << Tsa <<endl;
+        finstant << Tda <<endl;
 
         NowTotalNum--;
     }
