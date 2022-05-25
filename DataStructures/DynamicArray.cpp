@@ -584,15 +584,12 @@ bool DynamicArray::insertMulKeysIntoLeafAfterOneSplitting(int * keysToInsert, No
         rightSumKeys += newLeaf->Keys[rightidx];
         rightidx++;
     }
+    delete []keysGoRight;
+    delete []pointersGoRight;
     toLeaf->NumOfKeys = leftNum;
     newLeaf->NumOfKeys = rightNum;
     newLeaf->Parent = toLeaf->Parent;
     newLeaf->Next = toLeaf->Next;
-    /*
-    if (newLeaf->Next != nullptr) {
-        newLeaf->Next->Previous = newLeaf;
-    }
-     */
     toLeaf->Next = newLeaf;
     //newLeaf->Previous = toLeaf;
     int leftSumKeys = NodeSumKeys(toLeaf);
@@ -807,6 +804,8 @@ void DynamicArray::insertIntoNodeAfterSplitting(NodeDA * parent, int leftIndex, 
         newNode->Keys[j] = tempKeys[i];
         j ++;
     }
+    delete []tempKeys;
+    delete []tempPointers;
     newNode->NumOfKeys = j;
     newNode->Parent = parent->Parent;
     insertIntoParent(parent, leftSumKeys, newNode, rightSumKeys, needGoUpwards);
@@ -1268,12 +1267,8 @@ NodeDA * DynamicArray::coalesceNodes(NodeDA * n, NodeDA * neighbour, int neighbo
     n->NumOfKeys = 0;
     if (n->IsLeaf) {
         neighbour->Next = n->Next;
-        /*
-        if (neighbour->Next != nullptr) {
-            neighbour->Next->Previous = neighbour;
-        }
-         */
     }
+    delete n;
     deleteEntry(neighbour->Parent, n_index);
     return neighbour;
 }
@@ -1404,7 +1399,6 @@ NodeDA * DynamicArray::removeEntryFromNode(NodeDA * n, int indexInNode) {
             NodeDA * deleted = n->Pointers[indexInNode];
             deleted->Parent = nullptr;
             n->Pointers[indexInNode] = nullptr;
-            //delete deleted;
         }
     }
     int j = indexInNode;
@@ -1739,8 +1733,8 @@ void DynamicArray::Swap(int start1, int end1, int start2, int end2) {
     CutArray(end1+1);
     CutArray(start2);
     CutArray(end2+1);
-   // printf("after cutarray:\n");
-   // PrintTree();
+    // printf("after cutarray:\n");
+    // PrintTree();
     int numLeaf1, numLeaf2, startIndexLeaf1, startIndexLeaf2, endIndexLeaf1, endIndexLeaf2;
     NodeDA ** inter1 = nullptr;
     NodeDA ** inter2 = nullptr;
@@ -1748,6 +1742,8 @@ void DynamicArray::Swap(int start1, int end1, int start2, int end2) {
     numLeaf2 = RangePosInLeafPointer(start2, end2, &inter2, &startIndexLeaf2, &endIndexLeaf2);
 
     swapLeaf(inter1, inter2, numLeaf1, numLeaf2, startIndexLeaf1, endIndexLeaf1, startIndexLeaf2, endIndexLeaf2);
+    delete []inter1;
+    delete []inter2;
     int s1 = start1;
     int e1 = s1+(end2-start2);
     int e2 = end2;
@@ -1838,6 +1834,7 @@ int DynamicArray::RangePosInLeafPointer(int start, int end, NodeDA *** inter, in
         c = c->Next;
         i_leaf = 0;
     }
+    delete []inter;
     inter = nullptr;
     numLeaf = 0;
     * startIndexLeaf = 0;
@@ -2044,6 +2041,7 @@ void DynamicArray::redistributeNodesForCheckMinArray(NodeDA * n, NodeDA * neighb
         }
         neighbour->NumOfKeys = leftNumKeys;
         n->NumOfKeys = rightNumKeys;
+        delete []temp_pointers;
     } else { // neighbor is on the right (more keys) (neighbor_index == -1)
         leftIndex = 0;
         int j = 0;
@@ -2427,6 +2425,8 @@ void DynamicArray::swapWholeLeafAndGoUpwards(NodeDA **wholeLeaf1, NodeDA **whole
         adjustAncestorKeysAfterExchangingLeaves(LeftParentArray, lp);
         adjustAncestorKeysAfterExchangingLeaves(RightParentArray, rp);
     }
+    delete []LeftParentArray;
+    delete []RightParentArray;
     //---------------------------end exchange corresponding leaves------------------------------------------
 
     //delete leaves
@@ -2508,7 +2508,8 @@ NodeDA * DynamicArray::movePointerAfter(NodeDA * fromLeaf, int startIndex, int e
     int numKeysToInsert = endIndex - startIndex + 1;
     //insert
     insertKeysIntoLeaf(keysToInsert, pointersToInsert, numKeysToInsert, toLeaf, toIndex);
-
+    delete []pointersToInsert;
+    delete []keysToInsert;
     //delete
     int q = startIndex;
     int p = endIndex + 1;
@@ -2663,6 +2664,8 @@ void DynamicArray::insertMulLeavesIntoLeafParentSplitOnce(NodeDA * toParent, int
         s++;
     }
     newn->NumOfKeys = rightNum;
+    delete []allLeaf;
+    delete []allKeys;
     insertIntoParent(toParent, leftSum, newn, rightSum);
 }
 
@@ -2775,6 +2778,7 @@ void DynamicArray::insertMulLeavesIntoLeafParentAfterSplitting(NodeDA * toParent
     }
     insertMulIntoParent(toParent, parentNewSibling, parentNewSiblingNum);
     delete []leafInToParentTail;
+    delete []parentNewSibling;
 }
 
 void DynamicArray::insertMulIntoParent(NodeDA * toParent, NodeDA ** parentNewSibling, int parentNewSiblingNum) {
@@ -2856,8 +2860,9 @@ void DynamicArray::insertMulIntoNodeAfterSplitting(NodeDA * parent, int toIndex,
         } else {
             insertMulIntoParent(parent, parentNewSibling, parentNewSiblingNum); //insert after "parent"
         }
-        return;
         delete []parentNewSibling;
+        delete [] allPointers;
+        return;
     } else {
         int parentNewSiblingNum = numFullParent;
         numFullParent--;
@@ -2925,8 +2930,8 @@ void DynamicArray::insertMulIntoNodeAfterSplitting(NodeDA * parent, int toIndex,
             insertMulIntoParent(parent, parentNewSibling, parentNewSiblingNum);
         }
         delete []parentNewSibling;
+        delete []allPointers;
     }
-    delete []allPointers;
 }
 
 void DynamicArray::insertMulIntoNode(NodeDA * parent, int toIndex, NodeDA ** parentNewSibling,
@@ -3466,7 +3471,6 @@ void DynamicArray::adjustAncestorKeysAfterExchangingLeaves(NodeDA ** nodeArray, 
     }
     if (numNewArray > 1) {
         adjustAncestorKeysAfterExchangingLeaves(newArray, numNewArray);
-        return;
     } else {
         for (int i = 0; i < parent->NumOfKeys; ++i) {
             parent->Keys[i] = NodeSumKeys(parent->Pointers[i]);
@@ -5651,7 +5655,6 @@ NodeDA * DynamicArray::CutForDesInMove(int des, int* toIndex) {
             }
         } else if (leftl >= Capacity) {
             int * righta = new int[Capacity];
-            //righta := make([]int, Capacity)
             for (int i = 0; i < rightl; i ++) {
                 righta[i] = tmp[IndexInArray+i];
             }
