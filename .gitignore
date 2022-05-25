@@ -41,6 +41,8 @@
 **/CMakeScripts
 **/compile_commands.json
 
+CMakeLists.txt
+
 ## Local
 
 .idea/*.xml
