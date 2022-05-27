@@ -45,7 +45,7 @@ CMakeLists.txt
 
 ## Local
 
-.idea/*.xml
+.idea/
 
 build/**/*
 
