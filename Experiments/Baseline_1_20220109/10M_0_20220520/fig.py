@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.ticker import FuncFormatter
+import matplotlib
 
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
@@ -27,8 +28,8 @@ f_size = (14, 10)
 
 
 
-def hundreds_formatter(x, pos):
-    return int(x/100)
+def thousand_formatter(x, pos):
+    return int(x/1000)
 
 
 
@@ -43,7 +44,7 @@ execution_time5 = list()
 execution_time6 = list()
 
 
-input_path = r'delete1.csv'
+input_path = r'reorder1.csv'
 input_file = open(input_path, "r")
 
 
@@ -90,17 +91,22 @@ for i in range(0, 5):
 #          markersize=marker_size)
 plt.xscale('log')
 plt.xlabel("\%")
-plt.xticks(ticks=[0.0001, 0.001, 0.01, 0.1, 1], labels=[0.001, 0.01, 1, 10, 100])
-# ax.xaxis.set_major_formatter(FuncFormatter(hundreds_formatter))
+plt.xticks(ticks=[0.00001, 0.0001, 0.001, 0.01, 0.1, 1], labels=[0.001, 0.01, 0.1, 1, 10, 100])
+
 plt.ylabel('µs')
 plt.yscale('log')
-# plt.yticks(ticks=[100, 1000, 10000, 100000, 1000000])
+plt.yticks(ticks=[100, 1000, 10000])
+
+# ax.yaxis.set_major_formatter(FuncFormatter(thousand_formatter))
+
+# ax.get_yaxis().set_major_formatter(
+#     matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x)/1000, ',')))
+
 plt.legend(loc="upper center", bbox_to_anchor=(0.5, 1.15), ncol=6, fontsize=22)
 
 plt.grid(True)
 fig.tight_layout()
-plt.savefig("delete.png",
-            bbox_inches='tight')
+plt.savefig("reorder.png", bbox_inches='tight')
 plt.show()
 plt.close()
 
