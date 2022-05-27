@@ -1,55 +1,89 @@
 lt = 0
 da depth = 1
-lt= 0 ll length = 10000001
-lt= 1 ll length = 10000002
-lt= 2 ll length = 10000003
-lt= 3 ll length = 10000003
-lt= 4 ll length = 10000003
-lt= 5 ll length = 10000005
-lt= 6 ll length = 10000006
-lt= 7 ll length = 10000007
-lt= 8 ll length = 10000007
-lt= 9 ll length = 10000008
-lt= 19 ll length = 10000009
-lt= 29 ll length = 10000007
-lt= 39 ll length = 10000006
-lt= 49 ll length = 10000008
-lt= 59 ll length = 10000007
-lt= 69 ll length = 10000008
-lt= 79 ll length = 10000005
-lt= 89 ll length = 10000007
-numUpdate = 116 da depth = 2
-lt= 99 ll length = 10000004
-lt= 199 ll length = 10000003
-lt= 299 ll length = 10000007
-lt= 399 ll length = 10000011
-lt= 499 ll length = 10000034
-lt= 599 ll length = 10000026
-lt= 699 ll length = 10000037
-lt= 799 ll length = 10000024
-lt= 899 ll length = 10000025
-lt= 999 ll length = 10000030
-lt= 1999 ll length = 10000003
-lt= 2999 ll length = 9999974
-lt= 3999 ll length = 10000009
-lt= 4999 ll length = 10000025
+lt= 0 ll length = 10000002
+lt= 1 ll length = 10000004
+lt= 2 ll length = 10000004
+lt= 3 ll length = 10000005
+lt= 4 ll length = 10000007
+lt= 5 ll length = 10000008
+lt= 6 ll length = 10000008
+lt= 7 ll length = 10000009
+lt= 8 ll length = 10000010
+lt= 9 ll length = 10000011
+lt= 19 ll length = 10000010
+lt= 29 ll length = 10000009
+lt= 39 ll length = 10000009
+lt= 49 ll length = 10000013
+lt= 59 ll length = 10000015
+lt= 69 ll length = 10000016
+lt= 79 ll length = 10000015
+lt= 89 ll length = 10000016
+numUpdate = 110 da depth = 2
+lt= 99 ll length = 10000013
+lt= 199 ll length = 10000017
+lt= 299 ll length = 10000025
+lt= 399 ll length = 10000025
+lt= 499 ll length = 10000026
+lt= 599 ll length = 10000032
+lt= 699 ll length = 10000030
+lt= 799 ll length = 10000030
+lt= 899 ll length = 10000034
+lt= 999 ll length = 10000019
+lt= 1999 ll length = 10000016
+lt= 2999 ll length = 10000038
+lt= 3999 ll length = 10000092
+lt= 4999 ll length = 10000095
 lt = 5000
 da depth = 2
-lt= 5999 ll length = 10000024
-lt= 6999 ll length = 10000028
-lt= 7999 ll length = 10000023
-lt= 8999 ll length = 10000028
-lt= 9999 ll length = 10000064
+lt= 5999 ll length = 10000078
+lt= 6999 ll length = 10000106
+lt= 7999 ll length = 10000138
+lt= 8999 ll length = 10000142
+lt= 9999 ll length = 10000175
 lt = 10000
 da depth = 2
 lt = 15000
 da depth = 2
-numUpdate = 18108 da depth = 3
-lt= 19999 ll length = 10000069
+numUpdate = 17781 da depth = 3
+lt= 19999 ll length = 10000158
 lt = 20000
 da depth = 3
 lt = 25000
 da depth = 3
-lt= 29999 ll length = 10000102
+lt= 29999 ll length = 10000141
 lt = 30000
+da depth = 3
+lt = 35000
+da depth = 3
+lt= 39999 ll length = 10000189
+lt = 40000
+da depth = 3
+lt = 45000
+da depth = 3
+lt= 49999 ll length = 10000183
+lt = 50000
+da depth = 3
+lt = 55000
+da depth = 3
+lt= 59999 ll length = 10000162
+lt = 60000
+da depth = 3
+lt = 65000
+da depth = 3
+lt= 69999 ll length = 10000177
+lt = 70000
+da depth = 3
+lt = 75000
+da depth = 3
+lt= 79999 ll length = 10000056
+lt = 80000
+da depth = 3
+lt = 85000
+da depth = 3
+lt= 89999 ll length = 10000071
+lt = 90000
+da depth = 3
+lt = 95000
+da depth = 3
+lt= 99999 ll length = 10000046
 da depth = 3

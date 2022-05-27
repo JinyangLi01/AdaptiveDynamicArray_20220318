@@ -1,5 +1,4 @@
 #!/bin/sh
-make
 ./swap/swap swap1.csv swap1Log.txt
 #./swap/swap swap2.csv swap2Log.txt
 #./swap/swap swap3.csv swap3Log.txt
