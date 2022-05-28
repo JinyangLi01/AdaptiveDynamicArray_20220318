@@ -355,50 +355,84 @@ int main(int argc, char** argv) {
     //    if ( (lt+1 <= 10) || ((lt+1<=100) && ((lt+1)%10 == 0)) || ((lt+1<=1000) && ((lt+1)%100 == 0))
     //         || ((lt+1<=10000) && ((lt+1)%1000 == 0)) || ((lt+1<=100000) && ((lt+1)%10000 == 0))
     //         || ((lt+1<=1000000) && ((lt+1)%100000 == 0))) {
-        if ( (lt+1)*0.1/operations == 0.01 || (lt+1)*0.1/operations == 0.1 || (lt+1)*0.1/operations == 0.15 ) {
-            numUpdate ++;
-
-            cout<<"ll length: "<<ll->NumItem<<endl;
-            long long Tsa = 0, Tda = 0, Tll = 0, Ttv=0, Tvec = 0;
-            CurOutputNum ++;
-            double fl = (lt+1)*1.0/operations ;
+        if ((lt + 1) * 1.0 / operations == 0.01) {
+            numUpdate++;
+            cout << "ll length: " << ll->NumItem << endl;
+            long long Tsa = 0, Tda = 0, Tll = 0, Ttv = 0, Tvec = 0;
+            CurOutputNum++;
+            double fl = (lt + 1) * 1.0 / operations;
             finstant << fl << ",";
-
             int pos = RandomInt(1, NowTotalNum);
-            // printf("delete %d\n", pos);
-
             time1 = timeNow();
             SADelete(standard_array, pos, NowTotalNum);
             time2 = timeNow();
-            Tsa = duration(time2-time1);
-
+            Tsa = duration(time2 - time1);
             time1 = timeNow();
             da->Delete(pos);
             time2 = timeNow();
-            Tda = duration(time2-time1);
-
+            Tda = duration(time2 - time1);
             time1 = timeNow();
             ll->Delete(pos);
             time2 = timeNow();
             Tll = duration(time2 - time1);
-
             time1 = timeNow();
             tiered.remove(pos);
             time2 = timeNow();
             Ttv = duration(time2 - time1);
-
             time1 = timeNow();
             vec.erase(vec.begin() + pos - 1);
             time2 = timeNow();
             Tvec = duration(time2 - time1);
-
-            finstant <<Tda << ","<< Tsa<<","<<Tll<<","<<Ttv<<","<<Tvec<<endl;
-            cout<<"lt = "<< lt <<" da depth = "<<da->Depth()<<endl;
-            flog<<"lt= "<<lt<<" ll length = "<<ll->NumItem<<endl;
-
+            finstant << Tda << "," << Tsa << "," << Tll << "," << Ttv << "," << Tvec << endl;
+            cout << "lt = " << lt << " da depth = " << da->Depth() << endl;
+            flog << "lt= " << lt << " ll length = " << ll->NumItem << endl;
             NowTotalNum--;
+        } else {
+            if ((lt + 1) * 1.0 / operations == 0.1 || (lt + 1) * 1.0 / operations == 0.15) {
+                numUpdate++;
+
+                cout << "ll length: " << ll->NumItem << endl;
+                long long Tsa = 0, Tda = 0, Tll = 0, Ttv = 0, Tvec = 0;
+                CurOutputNum++;
+                double fl = (lt + 1) * 1.0 / operations;
+                finstant << fl << ",";
+
+                int pos = RandomInt(1, NowTotalNum);
+                // printf("delete %d\n", pos);
+
+                time1 = timeNow();
+                SADelete(standard_array, pos, NowTotalNum);
+                time2 = timeNow();
+                Tsa = duration(time2 - time1);
+
+                time1 = timeNow();
+                da->Delete(pos);
+                time2 = timeNow();
+                Tda = duration(time2 - time1);
+
+                time1 = timeNow();
+                ll->Delete(pos);
+                time2 = timeNow();
+                Tll = duration(time2 - time1);
+
+                time1 = timeNow();
+                tiered.remove(pos);
+                time2 = timeNow();
+                Ttv = duration(time2 - time1);
+
+                time1 = timeNow();
+                vec.erase(vec.begin() + pos - 1);
+                time2 = timeNow();
+                Tvec = duration(time2 - time1);
+
+                finstant << Tda << "," << Tsa << "," << Tll << "," << Ttv << "," << Tvec << endl;
+                cout << "lt = " << lt << " da depth = " << da->Depth() << endl;
+                flog << "lt= " << lt << " ll length = " << ll->NumItem << endl;
+
+                NowTotalNum--;
+            }
         }
-        if ((lt+1)*0.1/operations > 0.15) {
+        if ((lt+1)*1.0/operations > 0.15) {
             break;
         }
         numUpdate++;

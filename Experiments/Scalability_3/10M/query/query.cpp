@@ -1,4 +1,6 @@
-
+//
+// Created by Jinyang Li on 1/10/22.
+//
 #include <iostream>
 #include <fstream>
 #include <chrono>
@@ -48,6 +50,7 @@ int* RangeDistributionRandom( int num, int min, int max) {
     shuffle(n, n + num, generator());
     return n;
 }
+
 
 
 int * VectorRangeQuery(vector<int> &vec, int start, int end) {
@@ -171,6 +174,7 @@ int * SARangeQuery(int * & array, int start, int end) {
 
 
 
+
 int main(int argc, char** argv) {
     string filepath[3];
     filepath[0] = argv[1];
@@ -179,7 +183,7 @@ int main(int argc, char** argv) {
     finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
     flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
-//    filepath[0] = "instant.txt";
+//    filepath[0] = "instant.csv";
 //    filepath[1] = "log.txt";
 //    ofstream finstant, flog, ffinal;
 //    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
@@ -187,9 +191,10 @@ int main(int argc, char** argv) {
 //
     finstant<<" ,DA,SA,LL,TV,VEC"<<endl;
 
-    int iniNum = 1000000;
-    int danodesize = 100;
-    int m = 500;  //for linked list
+
+    int iniNum = 10000000;
+    int danodesize = 200;
+    int m = 2000;  //for linked list
     int operations = 100000;
     int InsertActions = operations * 25 / 100;
     int DeleteActions = operations * 25 / 100;
@@ -243,7 +248,7 @@ int main(int argc, char** argv) {
     }
     int length_SA = iniNum;
     LinkedList * ll = NewLinkedListForArray(m, array, iniNum);
-    Seq::Tiered<int, LayerItr<LayerEnd, Layer<101, Layer<101, Layer<101>>>>> tiered;
+    Seq::Tiered<int, LayerItr<LayerEnd, Layer<150, Layer<150, Layer<150>>>>> tiered;
     tiered.initialize(array, iniNum);
     vector<int> vec;
     vec.reserve(iniNum);
@@ -256,6 +261,7 @@ int main(int argc, char** argv) {
     cout<<"da depth = "<<da->Depth() << endl;
     int depth = 1;
     int numUpdate = 0;
+    cout << "iniNum = " << iniNum << endl;
     for (int lt = 0; lt < TotalActions; lt++) {
         if (lt % 5000 == 0) {
             cout<<"lt = "<<lt;
@@ -362,38 +368,49 @@ int main(int argc, char** argv) {
             CurOutputNum ++;
             double fl = (lt+1)*1.0/operations ;
             finstant << fl << ",";
-
-            int pos = RandomInt(1, NowTotalNum);
-            int start1 = 30000, end1 = 100000, start2 = 450000, end2 = 820000;
-
+            int * qans;
+            int start1, end1 = NowTotalNum + 2;
+            int queryLength = 200;
+            int num;
+            while (end1 >= NowTotalNum) {
+                start1 = RandomInt(1, NowTotalNum);
+                end1 = start1 + queryLength - 1;
+            }
             time1 = timeNow();
-            SASwap(standard_array, start1, end1, start2, end2, NowTotalNum);
+            qans = SARangeQuery(standard_array, start1, end1);
             time2 = timeNow();
-            Tsa = duration(time2-time1);
+            Tsa = duration(time2 - time1);
+            delete []qans;
 
             time1 = timeNow();
-            da->Swap(start1, end1, start2, end2);
+            qans = da->RangeQuery(start1, end1, &num);
             time2 = timeNow();
-            Tda = duration(time2-time1);
+            Tda = duration(time2 - time1);
+            delete []qans;
 
             time1 = timeNow();
-            ll->Swap(start1, end1, start2, end2);
+            qans = ll->RangeQuery(start1, end1, &num);
             time2 = timeNow();
             Tll = duration(time2 - time1);
+            delete []qans;
+
 
             time1 = timeNow();
-            tiered.Swap(start1, end1, start2, end2);
+            qans = tiered.RangeQuery(start1, end1, num);
             time2 = timeNow();
             Ttv = duration(time2 - time1);
+            delete []qans;
 
             time1 = timeNow();
-            VectorSwap(vec, start1, end1, start2, end2);
+            qans = VectorRangeQuery(vec, start1, end1);
             time2 = timeNow();
             Tvec = duration(time2 - time1);
+            delete []qans;
 
-            finstant <<Tda << ","<< Tsa<<","<<Tll<<","<<Ttv<<","<<Tvec<<endl;
+            finstant <<Tda << ","<< Tsa<<","<<Tll<<","<<Ttv<< "," << Tvec << endl;
             cout<<"lt = "<< lt <<" da depth = "<<da->Depth()<<endl;
             flog<<"lt= "<<lt<<" ll length = "<<ll->NumItem<<endl;
+
         }
         numUpdate++;
         if ((lt+1)*1.0/operations > 0.15) {

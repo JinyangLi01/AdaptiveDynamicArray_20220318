@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <fstream>
 #include <chrono>
@@ -187,9 +186,9 @@ int main(int argc, char** argv) {
 //
     finstant<<" ,DA,SA,LL,TV,VEC"<<endl;
 
-    int iniNum = 1000000;
-    int danodesize = 100;
-    int m = 500;  //for linked list
+    int iniNum = 10000000;
+    int danodesize = 200;
+    int m = 2000;  //for linked list
     int operations = 100000;
     int InsertActions = operations * 25 / 100;
     int DeleteActions = operations * 25 / 100;
@@ -243,7 +242,7 @@ int main(int argc, char** argv) {
     }
     int length_SA = iniNum;
     LinkedList * ll = NewLinkedListForArray(m, array, iniNum);
-    Seq::Tiered<int, LayerItr<LayerEnd, Layer<101, Layer<101, Layer<101>>>>> tiered;
+    Seq::Tiered<int, LayerItr<LayerEnd, Layer<150, Layer<150, Layer<150>>>>> tiered;
     tiered.initialize(array, iniNum);
     vector<int> vec;
     vec.reserve(iniNum);
@@ -351,10 +350,9 @@ int main(int argc, char** argv) {
             }
         }
 
-//    if ( (lt+1 <= 10) || ((lt+1<=100) && ((lt+1)%10 == 0)) || ((lt+1<=1000) && ((lt+1)%100 == 0))
-//         || ((lt+1<=10000) && ((lt+1)%1000 == 0)) || ((lt+1<=100000) && ((lt+1)%10000 == 0))
-//         || ((lt+1<=1000000) && ((lt+1)%100000 == 0))) {
-        if ( (lt+1)*1.0/operations == 0.01 || (lt+1)*1.0/operations == 0.1 || (lt+1)*1.0/operations == 0.15 ) {
+        if ( (lt+1 <= 10) || ((lt+1<=100) && ((lt+1)%10 == 0)) || ((lt+1<=1000) && ((lt+1)%100 == 0))
+             || ((lt+1<=10000) && ((lt+1)%1000 == 0)) || ((lt+1<=100000) && ((lt+1)%10000 == 0))
+             || ((lt+1<=1000000) && ((lt+1)%100000 == 0))) {
             numUpdate ++;
 
             cout<<"ll length: "<<ll->NumItem<<endl;
@@ -396,9 +394,6 @@ int main(int argc, char** argv) {
             flog<<"lt= "<<lt<<" ll length = "<<ll->NumItem<<endl;
         }
         numUpdate++;
-        if ((lt+1)*1.0/operations > 0.15) {
-            break;
-        }
     } //for lt <= loopTime
     //cout<<"da depth = "<<da->Depth() << endl;
     flog<<"da depth = "<<da->Depth() << endl;
