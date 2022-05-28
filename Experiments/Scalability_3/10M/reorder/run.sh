@@ -1,8 +1,8 @@
 #!/bin/sh
 #make
-./reorder/reorder /reorderreorder1.csv /reorderreorder1Log.txt
-./reorder/reorder /reorderreorder2.csv /reorderreorder2Log.txt
-./reorder/reorder /reorderreorder3.csv /reorderreorder3Log.txt
-./reorder/reorder /reorderreorder4.csv /reorderreorder4Log.txt
-./reorder/reorder /reorderreorder5.csv /reorderreorder5Log.txt
+./reorder/reorder reorder/reorder1.csv reorder/reorder1Log.txt
+# ./reorder/reorder reorder/reorder2.csv reorder/reorder2Log.txt
+# ./reorder/reorder reorder/reorder3.csv reorder/reorder3Log.txt
+# ./reorder/reorder reorder/reorder4.csv reorder/reorder4Log.txt
+# ./reorder/reorder reorder/reorder5.csv reorder/reorder5Log.txt
 #./reorder/average reorder

@@ -1,0 +1,6 @@
+lt = 0
+da depth = 1
+numUpdate = 7 da depth = 2
+numUpdate = 149 da depth = 3
+lt= 999 ll length = 99993
+numUpdate = 2852 da depth = 4

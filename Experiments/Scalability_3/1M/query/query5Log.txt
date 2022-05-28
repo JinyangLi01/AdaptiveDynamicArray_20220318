@@ -1,0 +1,14 @@
+lt = 0
+da depth = 1
+numUpdate = 49 da depth = 2
+lt= 999 ll length = 999996
+numUpdate = 4597 da depth = 3
+lt = 5000
+da depth = 3
+lt= 9999 ll length = 1000038
+lt = 10000
+da depth = 3
+lt= 14999 ll length = 1000087
+lt = 15000
+da depth = 3
+da depth = 3
