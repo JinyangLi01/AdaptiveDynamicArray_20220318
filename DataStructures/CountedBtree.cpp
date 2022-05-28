@@ -261,7 +261,7 @@ void CountedBtree::insertIntoLeafAfterSplitting(NodeForCBT * leaf, int key, int 
     new_leaf->NumOfKeys = rightNumKeys;
 
     insertIntoParent(leaf, leftNumKeys, new_leaf, rightNumKeys, KeyToLift);
-    // delete []temp_keys;
+    delete []temp_keys;
 }
 
 void CountedBtree::insertIntoNodeForCBT(NodeForCBT * n, int left_index, int sumKeysRight, NodeForCBT * right, int KeyToLift) const {
@@ -376,9 +376,9 @@ void CountedBtree::insertIntoNodeForCBTAfterSplitting(NodeForCBT * parent, int l
     j++;
     new_NodeForCBT->Parent = parent->Parent;
     insertIntoParent(parent, LeftSumKeys, new_NodeForCBT, RightSumKeys, KeyToLift);
-    // delete []temp_keys;
-    // delete []temp_keynum;
-    // delete []temp_pointers;
+    delete []temp_keys;
+    delete []temp_keynum;
+    delete []temp_pointers;
 }
 
 void CountedBtree::insertIntoParent(NodeForCBT * left, int sumKeysLeft, NodeForCBT * right, int sumKeysRight, int KeyToLift) {
