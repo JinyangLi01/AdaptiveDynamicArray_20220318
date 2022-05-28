@@ -350,9 +350,10 @@ int main(int argc, char** argv) {
             }
         }
 
-        if ( (lt+1 <= 10) || ((lt+1<=100) && ((lt+1)%10 == 0)) || ((lt+1<=1000) && ((lt+1)%100 == 0))
-             || ((lt+1<=10000) && ((lt+1)%1000 == 0)) || ((lt+1<=100000) && ((lt+1)%10000 == 0))
-             || ((lt+1<=1000000) && ((lt+1)%100000 == 0))) {
+//    if ( (lt+1 <= 10) || ((lt+1<=100) && ((lt+1)%10 == 0)) || ((lt+1<=1000) && ((lt+1)%100 == 0))
+//         || ((lt+1<=10000) && ((lt+1)%1000 == 0)) || ((lt+1<=100000) && ((lt+1)%10000 == 0))
+//         || ((lt+1<=1000000) && ((lt+1)%100000 == 0))) {
+        if ( (lt+1)*1.0/operations == 0.01 || (lt+1)*1.0/operations == 0.1 || (lt+1)*1.0/operations == 0.15 ) {
             numUpdate ++;
 
             cout<<"ll length: "<<ll->NumItem<<endl;
@@ -394,6 +395,9 @@ int main(int argc, char** argv) {
             flog<<"lt= "<<lt<<" ll length = "<<ll->NumItem<<endl;
         }
         numUpdate++;
+        if ((lt+1)*1.0/operations > 0.15) {
+            break;
+        }
     } //for lt <= loopTime
     //cout<<"da depth = "<<da->Depth() << endl;
     flog<<"da depth = "<<da->Depth() << endl;
