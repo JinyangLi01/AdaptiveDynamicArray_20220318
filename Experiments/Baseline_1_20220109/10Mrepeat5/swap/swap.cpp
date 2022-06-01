@@ -185,7 +185,6 @@ int main(int argc, char** argv) {
 //    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 //
     finstant<<" ,DA,SA,LL,TV,VEC"<<endl;
-
     int iniNum = 10000000;
     int danodesize = 200;
     int m = 2000;  //for linked list
@@ -252,6 +251,7 @@ int main(int argc, char** argv) {
     delete []array;
     int NumSA, NumDA, Numll, NumCBT, NumTV;
     //da->PrintTree();
+    cout << "iniNum = " << iniNum << endl;
     cout<<"da depth = "<<da->Depth() << endl;
     int depth = 1;
     int numUpdate = 0;

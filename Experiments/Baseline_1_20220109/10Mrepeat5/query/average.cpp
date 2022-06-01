@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
         readCSV(i, argv[1]);
     }
     ofstream fout;
-    fout.open("avg.csv", ios::out | ios::in | ios::trunc);
+    fout.open("query_avg.csv", ios::out | ios::in | ios::trunc);
     fout << title << endl;
     for (int k = 0; k < rowNum; ++k) {
         fout<<proportion[k]<<",";

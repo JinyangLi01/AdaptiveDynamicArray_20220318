@@ -1,4 +1,3 @@
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -18,7 +17,7 @@ line_style = ['o-', 's--', '^:', '-.p', 'h-', 'D--']
 color = ['C5', 'C1', 'C2', 'C3', 'C4', 'C0']
 plt_title = ["BlueNile", "COMPAS", "Credit Card"]
 
-label = ["ADA", "SA", "LL", "CBT", "TV", "VEC"]
+label = ["ADA", "SA", "LL", "TV", "VEC"]
 line_width = 8
 marker_size = 15
 # f_size = (14, 10)
@@ -43,7 +42,7 @@ execution_time5 = list()
 execution_time6 = list()
 
 
-input_path = r'avg.csv'
+input_path = r'reorder_avg.csv'
 input_file = open(input_path, "r")
 
 

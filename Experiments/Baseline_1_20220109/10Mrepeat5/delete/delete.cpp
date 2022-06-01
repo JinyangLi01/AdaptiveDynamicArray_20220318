@@ -10,6 +10,7 @@
 #include "../../../../DataStructures/LinkedList.h"
 #include "../../../../DataStructures/tiered-vector.h"
 #include <vector>
+
 using namespace std;
 using namespace Seq;
 typedef std::chrono::high_resolution_clock::time_point TimeVar;
@@ -175,18 +176,18 @@ int * SARangeQuery(int * & array, int start, int end) {
 
 int main(int argc, char** argv) {
     string filepath[3];
-    filepath[0] = argv[1];
-    filepath[1] = argv[2];
+    // filepath[0] = argv[1];
+    // filepath[1] = argv[2];
+    // ofstream finstant, flog, ffinal;
+    // finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
+    // flog.open(filepath[1], ios::out | ios::in | ios::trunc);
+
+    filepath[0] = "delete1.csv";
+    filepath[1] = "delete1Log.txt";
     ofstream finstant, flog, ffinal;
     finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
     flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
-//    filepath[0] = "instant.csv";
-//    filepath[1] = "log.txt";
-//    ofstream finstant, flog, ffinal;
-//    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
-//    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
-//
     finstant<<" ,DA,SA,LL,TV,VEC"<<endl;
 
 
@@ -258,6 +259,8 @@ int main(int argc, char** argv) {
     cout<<"da depth = "<<da->Depth() << endl;
     int depth = 1;
     int numUpdate = 0;
+    printf("data size = %d\n", iniNum);
+
     for (int lt = 0; lt < TotalActions; lt++) {
     if (lt % 5000 == 0) {
         cout<<"lt = "<<lt;
@@ -269,6 +272,7 @@ int main(int argc, char** argv) {
         depth++;
         flog<<"numUpdate = "<<numUpdate<<" da depth = "<<depth<<endl;
     }
+
     switch (a[lt]) {
 
         case 2: //insert
