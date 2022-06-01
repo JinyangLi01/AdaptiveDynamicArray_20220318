@@ -53,16 +53,6 @@ int* RangeDistributionRandom( int num, int min, int max) {
 
 
 
-int * VectorRangeQuery(vector<int> &vec, int start, int end) {
-    int queryLength = end - start + 1;
-    int * qans = new int[queryLength];
-    for (int i = start-1; i <= end-1; i++){
-        qans[i-start+1] = vec[i];
-    }
-    return qans;
-}
-
-
 void VectorSwap(vector<int> &vec, int start1, int end1, int start2, int end2)  {
     int len = end2-start1+1;
     int * newarray = new int[len+5];// make([]int, len)
@@ -172,6 +162,16 @@ int * SARangeQuery(int * & array, int start, int end) {
     return qans;
 }
 
+
+
+int * VectorRangeQuery(vector<int> &vec, int start, int end) {
+    int queryLength = end - start + 1;
+    int * qans = new int[queryLength];
+    for (int i = start-1; i <= end-1; i++){
+        qans[i-start+1] = vec[i];
+    }
+    return qans;
+}
 
 
 
