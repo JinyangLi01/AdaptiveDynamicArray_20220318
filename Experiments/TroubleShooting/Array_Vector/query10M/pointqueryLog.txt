@@ -1,0 +1,80 @@
+lt = 0
+da depth = 1
+SA 300  VEC  200
+SA 300  VEC  300
+SA 300  VEC  400
+SA 200  VEC  100
+SA 400  VEC  600
+SA 300  VEC  600
+SA 700  VEC  200
+SA 200  VEC  200
+SA 200  VEC  200
+SA 400  VEC  200
+SA 300  VEC  200
+SA 400  VEC  100
+SA 300  VEC  200
+SA 200  VEC  200
+SA 200  VEC  300
+SA 300  VEC  300
+SA 300  VEC  400
+SA 200  VEC  300
+SA 400  VEC  400
+numUpdate = 140 da depth = 2
+SA 300  VEC  300
+SA 400  VEC  700
+SA 700  VEC  501
+SA 300  VEC  300
+SA 200  VEC  400
+SA 200  VEC  400
+SA 200  VEC  200
+SA 300  VEC  200
+SA 200  VEC  100
+SA 200  VEC  300
+SA 200  VEC  200
+SA 200  VEC  200
+SA 300  VEC  300
+lt = 5000
+da depth = 2
+SA 200  VEC  300
+SA 200  VEC  200
+SA 300  VEC  200
+SA 100  VEC  200
+SA 300  VEC  300
+lt = 10000
+da depth = 2
+lt = 15000
+da depth = 2
+numUpdate = 17393 da depth = 3
+SA 200  VEC  300
+lt = 20000
+da depth = 3
+lt = 25000
+da depth = 3
+SA 200  VEC  100
+lt = 30000
+da depth = 3
+lt = 35000
+da depth = 3
+SA 300  VEC  200
+lt = 40000
+da depth = 3
+lt = 45000
+da depth = 3
+SA 200  VEC  100
+lt = 50000
+da depth = 3
+lt = 55000
+da depth = 3
+SA 300  VEC  300
+lt = 60000
+da depth = 3
+lt = 65000
+da depth = 3
+SA 200  VEC  400
+lt = 70000
+da depth = 3
+lt = 75000
+da depth = 3
+SA 400  VEC  300
+lt = 80000
+da depth = 3
