@@ -400,6 +400,7 @@ int main(int argc, char** argv) {
             finstant <<Tda << ","<< Tsa<<","<<Tll<<","<<Ttv << "," << Tvec << endl;
 
             cout<<"lt = "<< lt <<" da depth = "<<da->Depth()<<endl;
+            cout << "SA " << Tsa << "  VEC  " << Tvec << endl;
             // flog<<"lt= "<<lt<<" ll length = "<<ll->NumItem<<endl;
             flog << "SA " << Tsa << "  VEC  " << Tvec << endl;
         }

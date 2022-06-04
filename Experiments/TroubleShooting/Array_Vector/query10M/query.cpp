@@ -65,6 +65,7 @@ int * VectorRangeQuery(vector<int> &vec, int start, int end, ofstream & flog) {
         time_sum += duration(time2 - time1);
     }
     flog << "  VEC  " << time_sum << endl;
+    cout << "  VEC  " << time_sum << endl;
     return qans;
 }
 
@@ -181,6 +182,7 @@ int * SARangeQuery(int * & array, int start, int end, ofstream & flog) {
         time_sum += duration(time2 - time1);
     }
     flog << "SA " << time_sum;
+    cout << "SA " << time_sum;
     return qans;
 
 }
