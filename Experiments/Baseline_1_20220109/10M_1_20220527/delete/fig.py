@@ -15,20 +15,21 @@ sns.set_style("whitegrid")
 # sns.palplot(sns.color_palette("Paired", 9))
 
 line_style = ['o-', 's--', '^:', '-.p', 'h-', 'D--']
-color = ['C5', 'C1', 'C2', 'C3', 'C4', 'C0']
-plt_title = ["BlueNile", "COMPAS", "Credit Card"]
+color = ['C5', 'C1', 'C7', 'C3', 'C9']
+# color = ['red', 'blue', 'green', 'orange', 'black']
 
-label = ["ADA", "SA", "LL", "CBT", "TV", "VEC"]
+# plt_title = ["BlueNile", "COMPAS", "Credit Card"]
+
+label = ["ADA", "SA", "LL", "TV", "VEC"]
 line_width = 8
 marker_size = 15
-# f_size = (14, 10)
 
 f_size = (14, 10)
 
 
 
-def hundreds_formatter(x, pos):
-    return int(x/100)
+# def hundreds_formatter(x, pos):
+#     return int(x/100)
 
 
 
@@ -43,7 +44,7 @@ execution_time5 = list()
 execution_time6 = list()
 
 
-input_path = r'avg.csv'
+input_path = r'delete_avg.csv'
 input_file = open(input_path, "r")
 
 
@@ -61,7 +62,7 @@ for line in Lines:
 
     items = line.strip().split(',')
     x_list.append(float(items[0]))
-    for i in range(0, 6):
+    for i in range(0, 5):
         execution_time[i].append(float(items[i+1]))
     # execution_time1.append(float(items[1]))
     # execution_time2.append(float(items[2]))
@@ -74,7 +75,7 @@ for line in Lines:
 
 
 fig, ax = plt.subplots(1, 1, figsize=f_size)
-for i in range(0, 6):
+for i in range(0, 5):
     plt.plot(x_list, execution_time[i], color=color[i], label=label[i], linewidth=line_width,
              markersize=marker_size)
 
@@ -90,11 +91,12 @@ for i in range(0, 6):
 #          markersize=marker_size)
 plt.xscale('log')
 plt.xlabel("\%")
-plt.xticks(ticks=[0.0001, 0.001, 0.01, 0.1, 1], labels=[0.001, 0.01, 1, 10, 100])
-# ax.xaxis.set_major_formatter(FuncFormatter(hundreds_formatter))
+plt.xticks(ticks=[0.00001, 0.0001, 0.001, 0.01, 0.1, 1], labels=[0.001, 0.01, 0.1, 1, 10, 100])
+
 plt.ylabel('µs')
 plt.yscale('log')
-plt.yticks(ticks=[100, 1000, 10000, 100000])
+# plt.yticks(ticks=[100, 1000])
+
 plt.legend(loc="upper center", bbox_to_anchor=(0.5, 1.15), ncol=6, fontsize=22)
 
 plt.grid(True)
