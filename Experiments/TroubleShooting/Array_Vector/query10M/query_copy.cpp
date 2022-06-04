@@ -58,12 +58,18 @@ int * VectorRangeQuery(vector<int> &vec, int start, int end, ofstream & flog) {
     int * qans = new int[queryLength];
     TimeVar time1, time2;
     int time_sum = 0;
-    for (int i = start-1; i <= end-1; i++){
-        time1 = timeNow();
-        qans[i-start+1] = vec[i];
-        time2 = timeNow();
-        time_sum += duration(time2 - time1);
-    }
+//    for (int i = start-1; i <= end-1; i++){
+//        time1 = timeNow();
+//        qans[i-start+1] = vec[i];
+//        time2 = timeNow();
+//        time_sum += duration(time2 - time1);
+//    }
+
+    time1 = timeNow();
+    copy(vec.begin() + start-1, vec.begin() + end, qans);
+    time2 = timeNow();
+    time_sum += duration(time2 - time1);
+
     flog << "  VEC  " << time_sum << endl;
     cout << "  VEC  " << time_sum << endl;
 
@@ -177,16 +183,18 @@ int * SARangeQuery(int * & array, int start, int end, ofstream & flog) {
     int * qans = new int[queryLength];
     TimeVar time1, time2;
     int time_sum = 0;
-    for (int i = start-1; i <= end-1; i++){
-        time1 = timeNow();
-        qans[i-start+1] = array[i];
-        time2 = timeNow();
-        time_sum += duration(time2 - time1);
-    }
+//    for (int i = start-1; i <= end-1; i++){
+//        time1 = timeNow();
+//        qans[i-start+1] = array[i];
+//        time2 = timeNow();
+//        time_sum += duration(time2 - time1);
+//    }
+    time1 = timeNow();
+    copy(array+start-1, array+end, qans);
+    time2 = timeNow();
+    time_sum += duration(time2 - time1);
     flog << "SA " << time_sum;
     cout << "SA " << time_sum;
-
-//    copy(array+start-1, array+end, qans);
 
     return qans;
 }
@@ -202,8 +210,8 @@ int main(int argc, char** argv) {
     // finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
     // flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
-   filepath[0] = "query2.csv";
-   filepath[1] = "queryLog2.txt";
+   filepath[0] = "query_copy.csv";
+   filepath[1] = "query_copyLog.txt";
    ofstream finstant, flog, ffinal;
    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
