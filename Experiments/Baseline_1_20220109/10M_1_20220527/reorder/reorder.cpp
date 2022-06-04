@@ -188,7 +188,7 @@ int main(int argc, char** argv) {
 //    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 //
     finstant<<" ,DA,SA,LL,TV,VEC"<<endl;
-
+    printf("here is reorder\n");
 
     int iniNum = 10000000;
     int danodesize = 200;
