@@ -253,7 +253,6 @@ int main(int argc, char** argv) {
             case 4: //reorder
             {
                 int len = reorderLength;
-                ir++;
                 if (len >= NowTotalNum) {
                     len = NowTotalNum-1;
                 }
