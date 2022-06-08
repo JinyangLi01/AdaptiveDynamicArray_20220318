@@ -43,23 +43,20 @@ int RandomInt(int min, int max) {
     return dist(generator());
 }
 
-int* RangeDistributionRandom( int num, int min, int max) {
-    int * n = new int[num];
-    for (int j = 0; j < num; ++j) {
-        n[j] = RandomInt(min, max);
-    }
-    shuffle(n, n + num, generator());
-    return n;
-}
-
+//int* RangeDistributionRandom( int num, int min, int max) {
+//    int * n = new int[num];
+//    for (int j = 0; j < num; ++j) {
+//        n[j] = RandomInt(min, max);
+//    }
+//    shuffle(n, n + num, generator());
+//    return n;
+//}
 
 
 int * VectorRangeQuery(vector<int> &vec, int start, int end) {
     int queryLength = end - start + 1;
     int * qans = new int[queryLength];
-    for (int i = start-1; i <= end-1; i++){
-        qans[i-start+1] = vec[i];
-    }
+    copy(vec.begin()+start-1, vec.begin()+end, qans);
     return qans;
 }
 
@@ -68,25 +65,12 @@ void VectorSwap(vector<int> &vec, int start1, int end1, int start2, int end2)  {
     int len = end2-start1+1;
     int * newarray = new int[len+5];// make([]int, len)
     int in = 0;
-    for (int k = start2-1; k <= end2-1; k ++) {
-        newarray[in] = vec[k];
-        in++;
-    }
-
-    for (int k = end1; k < start2-1; k ++) {
-        newarray[in] = vec[k];
-        in++;
-    }
-
-    for (int k = start1-1; k <= end1-1; k ++) {
-        newarray[in] = vec[k];
-        in++;
-    }
-    in = 0;
-    for (int k = start1-1; k <= end2-1; k ++) {
-        vec[k] = newarray[in];
-        in++;
-    }
+    copy(vec.begin() + start2-1, vec.begin()+end2, newarray);
+    in += end2 - (start2 - 1);
+    copy(vec.begin() + end1, vec.begin() + start2-1, newarray + in);
+    in += start2 - 1 - end1;
+    copy(vec.begin() + start1 - 1, vec.begin() + end1, newarray + in);
+    copy(newarray, newarray + end2 - (start1 - 1), vec.begin() + start1 - 1);
     delete []newarray;
 }
 
@@ -101,75 +85,52 @@ void SAInsert(int * & array, int ToInsert, int pos, int NumItems, int & Length) 
         // printf("SAInsert, allocate %d\n", newLen+1);
         int * newarray = new int[newLen + 1];
         int j = 0;
-        for (int i = 0; i < NumItems + 1; ++i) {
-            if (i == pos-1) {
-                continue;
-            }
-            newarray[i] = array[j];
-            j++;
-        }
+        copy(array, array + pos, newarray);
+        copy(array + pos, array + NumItems, newarray + pos);
         newarray[pos-1] = ToInsert;
         delete []array;
         array = newarray;
-        NumItems += 1;
         Length = newLen;
         return;
     }
     int itemToStore = ToInsert;
-    for (int i = pos-1; i <= NumItems; ++i) {
-        int tmp = array[i];
-        array[i] = itemToStore;
-        itemToStore = tmp;
-    }
+    copy(array + pos - 1, array + NumItems, array + pos);
+    array[pos-1] = ToInsert;
 }
 
 void SADelete(int * & array, int pos, int NumItems) {
-    if (pos > NumItems) {
-        pos = NumItems;
-    }
-    for (int i = pos; i < NumItems; i++) {
-        array[i-1] = array[i];
+    if (pos < NumItems) {
+        copy(array + pos, array + NumItems, array + pos - 1);
     }
 }
 
-void SAReorder(int * & array, int start, int end, const int * newID) {
-    for (int i = start; i <= end; ++i) {
-        array[i-1] = newID[i-start];
-    }
+
+void SAReorder(int * & array, int start, int end, const int * newID, int len) {
+    copy(newID, newID + len, array + start - 1);
 }
+
 
 void SASwap(int * & array, int start1, int end1, int start2, int end2, int NowTotalNum) {
     int len = end2-start1+1;
     int * newarray = new int[len+5];// make([]int, len)
     int in = 0;
-    for (int k = start2-1; k <= end2-1; k ++) {
-        newarray[in] = array[k];
-        in++;
-    }
+    copy(array + start2 - 1, array + end2, newarray);
+    in += end2 - (start2 - 1);
 
-    for (int k = end1; k < start2-1; k ++) {
-        newarray[in] = array[k];
-        in++;
-    }
+    copy(array + end1, array + start2 - 1, newarray + in);
+    in += start2 - 1 - end1;
 
-    for (int k = start1-1; k <= end1-1; k ++) {
-        newarray[in] = array[k];
-        in++;
-    }
-    in = 0;
-    for (int k = start1-1; k <= end2-1; k ++) {
-        array[k] = newarray[in];
-        in++;
-    }
+    copy(array + start1 - 1, array + end1, newarray + in);
+
+    copy(newarray, newarray + end2 - (start1 - 1), array + start1 - 1);
+
     delete []newarray;
 }
 
 int * SARangeQuery(int * & array, int start, int end) {
     int queryLength = end - start + 1;
     int * qans = new int[queryLength];
-    for (int i = start-1; i <= end-1; i++){
-        qans[i-start+1] = array[i];
-    }
+    copy(array+start-1, array+end, qans);
     return qans;
 }
 
@@ -205,6 +166,8 @@ int main(int argc, char** argv) {
     printf("%d, %d, %d, %d\n", InsertActions, DeleteActions, ReorderActions, SwapActions);
     printf("# of operations = %d\n", operations);
     int CurOutputNum = 0;
+    int queryLength = 200;
+    int reorderLength = 200;
 
     int *a = new int[TotalActions];
     int ua = 0;
@@ -230,7 +193,7 @@ int main(int argc, char** argv) {
     //random_shuffle(&a[0], &a[MoveActions+SwapActions+ReorderActions]);
     //random_shuffle(&a[0], &a[operations]);
     //int * shortqueryrange = RangeDistributionRandom(, 1, 100);
-    int * reorderrange = RangeDistributionRandom(ReorderActions, 1, 100);
+//    int * reorderrange = RangeDistributionRandom(ReorderActions, 1, 100);
     int ir = 0;
 
     TimeVar time1, time2;
@@ -300,7 +263,7 @@ int main(int argc, char** argv) {
             }
             case 4: //reorder
             {
-                int len = reorderrange[ir];
+                int len = reorderLength;
                 if (len == 0) {
                     len = 1;
                 }
@@ -315,21 +278,16 @@ int main(int argc, char** argv) {
                 }
 
                 int * oldArray = new int[len];
-                for (int j = 0; j < len; ++j) {
-                    oldArray[j] = standard_array[start+j];
-                }
-                // sa->RangeQuery(start, end, &NumSA);
+                copy(standard_array + start, standard_array + start + len, oldArray);
                 int * newArray = new int[len];
                 for (int j = 0; j < len; ++j) {
                     newArray[j] = oldArray[len-j-1];
                 }
-                SAReorder(standard_array, start, end, newArray);
+                SAReorder(standard_array, start, end, newArray, len);
                 da->Reorder(start, end, newArray);
                 ll->Reorder(start, end, newArray);
                 tiered.Reorder(start, end, newArray);
-                for (int i = start-1; i <= end-1; ++i) {
-                    vec[i] = newArray[i-start+1];
-                }
+                copy(newArray, newArray + len, vec.begin() + start - 1);
                 delete []newArray;
                 delete []oldArray;
                 break;
@@ -367,44 +325,59 @@ int main(int argc, char** argv) {
             CurOutputNum ++;
             double fl = (lt+1)*1.0/operations ;
             finstant << fl << ",";
-            int * qans;
+            int * qans1, *qans2, *qans3, *qans4, *qans5;
             int start1, end1 = NowTotalNum + 2;
-            int queryLength = 200;
             int num;
             while (end1 >= NowTotalNum) {
                 start1 = RandomInt(1, NowTotalNum);
                 end1 = start1 + queryLength - 1;
             }
             time1 = timeNow();
-            qans = SARangeQuery(standard_array, start1, end1);
+            qans1 = SARangeQuery(standard_array, start1, end1);
             time2 = timeNow();
             Tsa = duration(time2 - time1);
-            delete []qans;
 
             time1 = timeNow();
-            qans = da->RangeQuery(start1, end1, &num);
+            qans2 = da->RangeQuery(start1, end1, &num);
             time2 = timeNow();
             Tda = duration(time2 - time1);
-            delete []qans;
+
 
             time1 = timeNow();
-            qans = ll->RangeQuery(start1, end1, &num);
+            qans3 = ll->RangeQuery(start1, end1, &num);
             time2 = timeNow();
             Tll = duration(time2 - time1);
-            delete []qans;
 
 
             time1 = timeNow();
-            qans = tiered.RangeQuery(start1, end1, num);
+            qans4 = tiered.RangeQuery(start1, end1, num);
             time2 = timeNow();
             Ttv = duration(time2 - time1);
-            delete []qans;
 
             time1 = timeNow();
-            qans = VectorRangeQuery(vec, start1, end1);
+            qans5 = VectorRangeQuery(vec, start1, end1);
             time2 = timeNow();
             Tvec = duration(time2 - time1);
-            delete []qans;
+
+            if (!CompareArray(qans1, qans2, num)) {
+                printf("qans1 != qans2\n");
+            }
+            if (!CompareArray(qans2, qans3, num)) {
+                printf("qans2 != qans3\n");
+            }
+            if (!CompareArray(qans3, qans4, num)) {
+                printf("qans3 != qans4\n");
+            }
+            if (!CompareArray(qans4, qans5, num)) {
+                printf("qans4 != qans5\n");
+            }
+
+            delete []qans1;
+            delete []qans2;
+            delete []qans3;
+            delete []qans4;
+            delete []qans5;
+
 
             finstant <<Tda << ","<< Tsa<<","<<Tll<<","<<Ttv<< "," << Tvec << endl;
             cout<<"lt = "<< lt <<" da depth = "<<da->Depth()<<endl;
@@ -415,7 +388,6 @@ int main(int argc, char** argv) {
     } //for lt <= loopTime
     //cout<<"da depth = "<<da->Depth() << endl;
     flog<<"da depth = "<<da->Depth() << endl;
-    delete []reorderrange;
     delete []a;
     flog.close();
     finstant.close();
