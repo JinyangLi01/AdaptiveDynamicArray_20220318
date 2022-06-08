@@ -206,9 +206,7 @@ int main(int argc, char** argv) {
     LinkedList * ll = NewLinkedListForArray(m, array, iniNum);
     Seq::Tiered<int, LayerItr<LayerEnd, Layer<101, Layer<101, Layer<101>>>>> tiered;
     tiered.initialize(array, iniNum);
-    vector<int> vec;
-    vec.reserve(iniNum);
-    copy(array, array + iniNum, vec.begin());
+    vector<int> vec(array, array + iniNum);
     delete []array;
     int NumSA, NumDA, Numll, NumCBT, NumTV;
     //da->PrintTree();
