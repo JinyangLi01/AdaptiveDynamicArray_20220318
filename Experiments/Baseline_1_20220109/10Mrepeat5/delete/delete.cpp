@@ -133,17 +133,17 @@ int * SARangeQuery(int * & array, int start, int end) {
 
 int main(int argc, char** argv) {
     string filepath[3];
-    // filepath[0] = argv[1];
-    // filepath[1] = argv[2];
-    // ofstream finstant, flog, ffinal;
-    // finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
-    // flog.open(filepath[1], ios::out | ios::in | ios::trunc);
+     filepath[0] = argv[1];
+     filepath[1] = argv[2];
+     ofstream finstant, flog, ffinal;
+     finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
+     flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
-    filepath[0] = "delete1.csv";
-    filepath[1] = "delete1Log.txt";
-    ofstream finstant, flog, ffinal;
-    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
-    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
+//    filepath[0] = "delete1.csv";
+//    filepath[1] = "delete1Log.txt";
+//    ofstream finstant, flog, ffinal;
+//    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
+//    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
     finstant<<" ,DA,SA,LL,TV,VEC"<<endl;
 
