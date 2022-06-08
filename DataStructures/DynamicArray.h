@@ -69,7 +69,7 @@ public:
     int NumOfKeys; // number of keys [fanout/2, fanout]
     NodeDA *Next; // like b+tree, all leaf nodes are linked together by this pointer
     explicit NodeDA(int capacity, int numkeys = 0, NodeDA * parent = nullptr, bool isleaf = false); // capacity means fanout
-    NodeDA(int capacity, NodeDA * parent, std::string str, bool isleaf = false); // create a node based on string 3 6 0 0, which means four keys are 3,6,0,0
+    NodeDA(int capacity, NodeDA * parent, const std::string& str, bool isleaf = false); // create a node based on string 3 6 0 0, which means four keys are 3,6,0,0
     ~NodeDA();
     int SumOfKeys() const; // return the sum of all keys
 };
@@ -222,7 +222,7 @@ private:
 
     int getLeftIndex(NodeDA *parent, NodeDA *left) const;
 
-    int NodeSumKeys(NodeDA *n);
+    static int NodeSumKeys(NodeDA *n);
 
     void
     insertIntoNodeAfterSplitting(NodeDA *n, int leftIndex, int sumKeysRight, NodeDA *right, bool needGoupwards = true);
@@ -231,7 +231,7 @@ private:
 
     void deleteEntry(NodeDA *n, int indexInNode);
 
-    NodeDA *removeEntryFromNode(NodeDA *n, int indexInNode);
+    static NodeDA *removeEntryFromNode(NodeDA *n, int indexInNode);
 
     void adjustRoot();
 
@@ -250,7 +250,7 @@ private:
 
     void CutArray(int pos);
 
-    void insertOneIntoLeafForCut(NodeDA *leaf, int *newarray, int length, int indexInLeaf);
+    static void insertOneIntoLeafForCut(NodeDA *leaf, int *newarray, int length, int indexInLeaf);
 
     void MergeOrRedistributeArrayAfterDelete(NodeDA *leaf, int IndexInLeaf, int IndexInArray);
 
@@ -269,11 +269,11 @@ private:
     void swapLeaf(NodeDA **inter1, NodeDA **inter2, int numLeaf1, int numLeaf2, int startIndexLeaf1, int endIndexLeaf1,
                   int startIndexLeaf2, int endIndexLeaf2);
 
-    int getIndexInParent(NodeDA *n);
+    int getIndexInParent(NodeDA *n) const;
 
     NodeDA * deleteMulEntry(NodeDA **entryToDelete, int numEntryToDelete);
 
-    static static void movePointerInNodeForward(NodeDA *node, int startIndex, int endIndex, int toIndex);
+    static void movePointerInNodeForward(NodeDA *node, int startIndex, int endIndex, int toIndex);
 
     //void PutLeavesIntoUpdateSumKeys(NodeDA **leaves, int numLeaf);
 
@@ -291,11 +291,11 @@ private:
     void insertMulIntoNewRoot(NodeDA *toParent, NodeDA **parentNewSibling, int parentNewSiblingNum);
 
     void insertMulIntoNode(NodeDA *parent, int toIndex, NodeDA **parentNewSibling, int parentNewSiblingNum,
-                           int ParentIncrease);
+                           int ParentIncrease) const;
 
     void insertMulIntoNodeAfterSplitting(NodeDA *parent, int toIndex, NodeDA **pointerToInsert, int pointerToInsertNum);
 
-    void redistributeNodesForCheckMinArray(NodeDA *n, NodeDA *neighbour, int neighbour_index);
+    void redistributeNodesForCheckMinArray(NodeDA *n, NodeDA *neighbour, int neighbour_index) const;
 
     void
     insertLeavesIntoLeafParent(NodeDA *toParent, int startIndexInParent, NodeDA **leafToInsert, int numLeafToInsert);
@@ -419,12 +419,12 @@ private:
 
     NodeDA *insertOneIntoLeafAfterSplittingForMove(NodeDA *leaf, int *newID, int length, int indexInLeaf, int *toIndex);
 
-    void insertIntoNode(NodeDA *n, int leftIndex, int sumKeysRight, NodeDA *right, bool needGoUpward = true);
+    static void insertIntoNode(NodeDA *n, int leftIndex, int sumKeysRight, NodeDA *right, bool needGoUpward = true);
 
     void insertOneIntoLeafAfterSplitting(NodeDA *leaf, int *newPointer, int length, int indexInLeaf,
                                          bool needGoupwards = true);
 
-    void AdjustAncestorKeyForOneNode(NodeDA *c);
+    static void AdjustAncestorKeyForOneNode(NodeDA *c);
 
     void insertMulLeavesIntoLeafParentSplitOnce(NodeDA *toParent, int startIndexInParent, NodeDA **leafToInsert,
                                                 int numLeafToInsert);

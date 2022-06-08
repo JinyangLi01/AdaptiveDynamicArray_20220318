@@ -11,7 +11,7 @@ NodeDA::NodeDA(int capacity, int numkeys, NodeDA * parent, bool isleaf) {
 }
 
 
-NodeDA::NodeDA(int capacity, NodeDA * parent, std::string str, bool isleaf) {
+NodeDA::NodeDA(int capacity, NodeDA * parent, const std::string& str, bool isleaf) {
     Pointers = new NodeDA * [capacity];
     Keys = new int[capacity];
     Next = nullptr;
@@ -1262,10 +1262,10 @@ void DynamicArray::insertOneIntoLeafForDeletion(NodeDA * leaf, int * newa, int l
     NodeDA * c = leaf;
     NodeDA * parent = c->Parent;
     while (parent != nullptr) {
-        for (int i = 0; i < parent->NumOfKeys; i++) {
+        for (int j = 0; j < parent->NumOfKeys; j++) {
             //if (reflecDeepEqual(parenPointers[i], c) {
-            if (parent->Pointers[i] == c ) {
-                parent->Keys[i] --;
+            if (parent->Pointers[j] == c ) {
+                parent->Keys[j] --;
                 c = parent;
                 parent = c->Parent;
                 break;
@@ -1510,13 +1510,16 @@ void DynamicArray::Reorder(int start, int end, const int* neworder) {
     while (k < length) {
         for (; i < c->NumOfKeys; ++i) {
             int * curarray = reinterpret_cast<int *>(c->Pointers[i]);
-            for (; p < c->Keys[i]; p++) {
-                curarray[p] = neworder[k];
-                k++;
-                if (k == length) {
-                    flag = true;
-                    break;
-                }
+            if (k + c->Keys[i] - p <= length) {
+                std::copy(neworder + k, neworder + k + c->Keys[i] - p, curarray + p);
+                k += c->Keys[i] - p;
+            } else {
+                int len = length - k;
+                std::copy(neworder + k, neworder + k + len, curarray + p);
+//                std::copy(curarray + p, curarray + p + len, ans + k);
+                flag = true;
+                break;
+                k += len;
             }
             if (flag) {
                 break;
@@ -1571,7 +1574,6 @@ void DynamicArray::coalesceNodesForDeleteOperation(NodeDA * n, NodeDA * neighbou
     }
     n->NumOfKeys = 0;
     deleteEntryForDeleteOperatoin(n->Parent, n_index);
-    return;
 }
 
 void DynamicArray::deleteEntryForDeleteOperatoin(NodeDA * n, int indexInNode) {
@@ -1787,7 +1789,6 @@ void DynamicArray::insertOneIntoLeafForCut(NodeDA *  leaf, int * newarray, int l
     }
     leaf->Keys[i] = keyToStore;
     leaf->Pointers[i] = reinterpret_cast<NodeDA *>(pointerToStore);
-    return;
 }
 
 
@@ -2067,7 +2068,7 @@ void DynamicArray::deleteEntryForCheckMinArray(NodeDA * n, int indexInNode) {
     }
 }
 
-void DynamicArray::redistributeNodesForCheckMinArray(NodeDA * n, NodeDA * neighbour, int neighbour_index) {
+void DynamicArray::redistributeNodesForCheckMinArray(NodeDA * n, NodeDA * neighbour, int neighbour_index) const {
     int i, leftNumKeys = 0, rightNumKeys = 0, leftIndex, leftSumKeys = 0, rightSumKeys = 0;
     if (neighbour_index != -1) { // neighbor (more keys) is on the left
         leftIndex = neighbour_index;
@@ -2078,7 +2079,7 @@ void DynamicArray::redistributeNodesForCheckMinArray(NodeDA * n, NodeDA * neighb
         leftNumKeys = Min;
 
         int * temp_keys = new int[Capacity*2];
-        NodeDA ** temp_pointers = new NodeDA *[Capacity*2];
+        auto ** temp_pointers = new NodeDA *[Capacity*2];
         int tmp_j = 0;
         for (i = indexToGoRight; i < neighbour->NumOfKeys; i++ ){
             temp_pointers[tmp_j] = neighbour->Pointers[i];
@@ -2149,7 +2150,6 @@ void DynamicArray::redistributeNodesForCheckMinArray(NodeDA * n, NodeDA * neighb
     NodeDA * c = n->Parent;
     c->Keys[leftIndex] = leftSumKeys;
     c->Keys[leftIndex+1] = rightSumKeys;
-    return;
 }
 
 void DynamicArray::coalesceNodesForCheckMinArray(NodeDA * n, NodeDA * neighbour, int neighbour_index) {
@@ -2192,10 +2192,9 @@ void DynamicArray::coalesceNodesForCheckMinArray(NodeDA * n, NodeDA * neighbour,
     }
     n->NumOfKeys = 0;
     deleteEntryForCheckMinArray(n->Parent, n_index);
-    return;
 }
 
-int DynamicArray::getIndexInParent(NodeDA * n) {
+int DynamicArray::getIndexInParent(NodeDA * n) const {
     NodeDA * parent = n->Parent;
     for (int i = 0; i < Capacity; i++) {
         if (parent->Pointers[i] == n) {
@@ -2395,8 +2394,8 @@ void DynamicArray::swapWholeLeafAndGoUpwards(NodeDA **wholeLeaf1, NodeDA **whole
 
     //---------------------------start exchange corresponding leaves------------------------------------------
     NodeDA * LeftEdgeLeaf = nullptr, * RightEdgeLeaf = nullptr;
-    NodeDA ** LeftParentArray = new NodeDA * [exchangeNum];
-    NodeDA ** RightParentArray = new NodeDA * [exchangeNum];
+    auto ** LeftParentArray = new NodeDA * [exchangeNum];
+    auto ** RightParentArray = new NodeDA * [exchangeNum];
     int lp = 0, rp = 0;
     NodeDA * lastLeftGrandParent = nullptr;
     NodeDA * lastRightGrandParent = nullptr;
@@ -3001,7 +3000,7 @@ void DynamicArray::insertMulIntoNodeAfterSplitting(NodeDA * parent, int toIndex,
 }
 
 void DynamicArray::insertMulIntoNode(NodeDA * parent, int toIndex, NodeDA ** parentNewSibling,
-                                     int parentNewSiblingNum, int ParentIncrease) {
+                                     int parentNewSiblingNum, int ParentIncrease) const {
     auto ** tmpNodes = new NodeDA *[Capacity];
     int i = toIndex;
     int i_tmpNodes = 0;
@@ -3167,7 +3166,7 @@ void DynamicArray::insertMulIntoNewRoot(NodeDA * toParent, NodeDA ** parentNewSi
 
 NodeDA * DynamicArray::movePointerBefore(NodeDA * fromLeaf, int startIndex, int endIndex, NodeDA * toLeaf, int toIndex) {
     int * keysToInsert = new int[Capacity];
-    NodeDA ** pointersToInsert = new NodeDA *[Capacity];
+    auto ** pointersToInsert = new NodeDA *[Capacity];
     for (int i= startIndex; i <= endIndex; i++) {
         keysToInsert[i-startIndex] = fromLeaf->Keys[i];
         pointersToInsert[i-startIndex] = fromLeaf->Pointers[i];
@@ -3194,7 +3193,7 @@ void DynamicArray::UpdateSumKeys(NodeDA ** nodes, int numNode) {
         AdjustAncestorKeysAccordingToCurNode(nodes[0]);
         return;
     }
-    NodeDA ** newArray = new NodeDA *[numNode];// make([]*Node, numNode)
+    auto ** newArray = new NodeDA *[numNode];// make([]*Node, numNode)
     int numNewArray = 0;
 
     NodeDA * lastParent = nullptr, * parent = nullptr;
