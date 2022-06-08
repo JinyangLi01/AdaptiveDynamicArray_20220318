@@ -207,18 +207,14 @@ int main(int argc, char** argv) {
     DynamicArray *da = NewDynamicArray(array, iniNum, danodesize);
     // StandardArray *sa = NewStandardArray(array, iniNum);
     int * standard_array = new int[iniNum];
-    for (int i = 0; i < iniNum; i ++) {
-        standard_array[i] = array[i];
-    }
+    copy(array, array + iniNum, standard_array);
     int length_SA = iniNum;
     LinkedList * ll = NewLinkedListForArray(m, array, iniNum);
     Seq::Tiered<int, LayerItr<LayerEnd, Layer<101, Layer<101, Layer<101>>>>> tiered;
     tiered.initialize(array, iniNum);
     vector<int> vec;
     vec.reserve(iniNum);
-    for (int i = 0; i < iniNum; ++i) {
-        vec.push_back(array[i]);
-    }
+    copy(vec.begin(), vec.begin() + iniNum, standard_array);
     delete []array;
     int NumSA, NumDA, Numll, NumCBT, NumTV;
     //da->PrintTree();
@@ -264,9 +260,6 @@ int main(int argc, char** argv) {
             case 4: //reorder
             {
                 int len = reorderLength;
-                if (len == 0) {
-                    len = 1;
-                }
                 ir++;
                 if (len >= NowTotalNum) {
                     len = NowTotalNum-1;
