@@ -208,7 +208,7 @@ int main(int argc, char** argv) {
     tiered.initialize(array, iniNum);
     vector<int> vec;
     vec.reserve(iniNum);
-    copy(vec.begin(), vec.begin() + iniNum, standard_array);
+    copy(array, array + iniNum, vec.begin());
     delete []array;
     int NumSA, NumDA, Numll, NumCBT, NumTV;
     //da->PrintTree();

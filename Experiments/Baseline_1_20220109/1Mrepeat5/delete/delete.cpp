@@ -135,18 +135,18 @@ int * SARangeQuery(int * & array, int start, int end) {
 
 int main(int argc, char** argv) {
     string filepath[3];
-    filepath[0] = argv[1];
-    filepath[1] = argv[2];
+//    filepath[0] = argv[1];
+//    filepath[1] = argv[2];
+//    ofstream finstant, flog, ffinal;
+//    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
+//    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
+
+    filepath[0] = "instant.csv";
+    filepath[1] = "log.txt";
     ofstream finstant, flog, ffinal;
     finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
     flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
-//    filepath[0] = "instant.csv";
-//    filepath[1] = "log.txt";
-//    ofstream finstant, flog, ffinal;
-//    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
-//    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
-//
     finstant<<" ,DA,SA,LL,TV,VEC"<<endl;
 
     int iniNum = 1000000;
@@ -207,7 +207,7 @@ int main(int argc, char** argv) {
     tiered.initialize(array, iniNum);
     vector<int> vec;
     vec.reserve(iniNum);
-    copy(vec.begin(), vec.begin() + iniNum, standard_array);
+    copy(array, array + iniNum, vec.begin());
     delete []array;
     int NumSA, NumDA, Numll, NumCBT, NumTV;
     //da->PrintTree();
@@ -225,6 +225,7 @@ int main(int argc, char** argv) {
             depth++;
             flog<<"numUpdate = "<<numUpdate<<" da depth = "<<depth<<endl;
         }
+        cout << lt << endl;
         switch (a[lt]) {
 
                 case 2: //insert
