@@ -144,7 +144,7 @@ public:
      * Reorder range [start, end] according to neworder.
      * Eg, [a, b, c, d, e, f], Reorder(2, 4, [dcb]), get [a, d, c, b, e, f].
      */
-    void Reorder(int start, int end, int *neworder);
+    void Reorder(int start, int end, const int *neworder);
 
     /*
      * return the depth of tree in Dynamic Array, not including the arrays (rowid layer)
@@ -173,7 +173,7 @@ public:
     int GetFanout() const;
 
 
-    int GetNumItems();
+    int GetNumItems() const;
 
 private:
     int NumItems; // total number of items
@@ -220,7 +220,7 @@ private:
 
     void insertIntoNewRoot(NodeDA *left, int sumKeysLeft, NodeDA *right, int sumKeysRight);
 
-    int getLeftIndex(NodeDA *parent, NodeDA *left);
+    int getLeftIndex(NodeDA *parent, NodeDA *left) const;
 
     int NodeSumKeys(NodeDA *n);
 
@@ -235,7 +235,7 @@ private:
 
     void adjustRoot();
 
-    int getLeftNeighborIndex(NodeDA *n);
+    int getLeftNeighborIndex(NodeDA *n) const;
 
     NodeDA *coalesceNodes(NodeDA *n, NodeDA *neighbour, int neighbour_index);
 
@@ -273,7 +273,7 @@ private:
 
     NodeDA * deleteMulEntry(NodeDA **entryToDelete, int numEntryToDelete);
 
-    void movePointerInNodeForward(NodeDA *node, int startIndex, int endIndex, int toIndex);
+    static static void movePointerInNodeForward(NodeDA *node, int startIndex, int endIndex, int toIndex);
 
     //void PutLeavesIntoUpdateSumKeys(NodeDA **leaves, int numLeaf);
 
@@ -308,7 +308,7 @@ private:
 
     void swapWholeLeafAndGoUpwards(NodeDA **wholeLeaf1, NodeDA **bwholeLeaf2, int w1, int w2);
 
-    void exchangeLeaf(NodeDA *LeftLeaf, NodeDA *LeftParent, NodeDA *RightLeaf, NodeDA *RightParent);
+    void exchangeLeaf(NodeDA *LeftLeaf, NodeDA *LeftParent, NodeDA *RightLeaf, NodeDA *RightParent) const;
 
     void RedistributeMergeRecomputeKeysInAncestorsLeftPart(NodeDA *node);
 
@@ -432,14 +432,14 @@ private:
     bool
     insertKeysIntoLeaf(int *keysToInsert, NodeDA **pointersToInsert, int numKeysToInsert, NodeDA *toLeaf, int toIndex);
 
-    bool insertMulKeysIntoLeafAfterOneSplitting(int *keysToInsert, NodeDA **pointersToInsert, int numKeysToInsert,
+    bool insertMulKeysIntoLeafAfterOneSplitting(const int *keysToInsert, NodeDA **pointersToInsert, int numKeysToInsert,
                                                 NodeDA *toLeaf,
                                                 int toIndex);
 
-    void insertMulKeysIntoLeaf(int *keysToInsert, NodeDA **pointersToInsert, int numKeysToInsert, NodeDA *toLeaf,
+    void insertMulKeysIntoLeaf(const int *keysToInsert, NodeDA **pointersToInsert, int numKeysToInsert, NodeDA *toLeaf,
                                int toIndex);
 
-    void insertMulKeysIntoLeafAfterMulSplitting(int *keysToInsert, NodeDA **pointersToInsert, int numKeysToInsert,
+    void insertMulKeysIntoLeafAfterMulSplitting(const int *keysToInsert, NodeDA **pointersToInsert, int numKeysToInsert,
                                                 NodeDA *toLeaf, int toIndex);
 
     void SwapWhenLeftLenIs2(NodeDA *left1, NodeDA *left2, int startIndexLeaf1, int endIndexLeaf1, NodeDA **inter2,

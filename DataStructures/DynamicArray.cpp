@@ -85,7 +85,7 @@ DynamicArray::DynamicArray(int * & array, int numItems, int capacity) {
  * Has exactly the same functionality as DynamicArray::DynamicArray
  */
 DynamicArray * NewDynamicArray(int * & array, int numItems, int degree ){
-    DynamicArray * da =new DynamicArray(array, numItems, degree);
+    auto * da =new DynamicArray(array, numItems, degree);
     return da;
 }
 
@@ -128,7 +128,76 @@ DynamicArray::~DynamicArray() {
 
 
 
-//return length of ans, ans is answer array
+////return length of ans, ans is answer array
+// repeat point query
+//int* DynamicArray::RangeQuery(int start, int end, int * lenOfAns) {
+//    int dastart = 1;
+//    int daend = NumItems;
+//    int realstart = start;
+//    int realend = end;
+//    if (realstart < dastart) {
+//        realstart = dastart;
+//    }
+//    if (realend > daend) {
+//        realend = daend;
+//    }
+//    int realnum = realend - realstart + 1;
+//    *lenOfAns = realnum;
+//    if (realnum <= 0) {
+//        return nullptr;
+//    }
+//    int *ans = new int[realnum];
+//    NodeDA * c = Root;
+//    int p = realstart;
+//    while (!c->IsLeaf) {
+//        for (int i = 0; i < c->NumOfKeys; ++i) {
+//            if (p <= c->Keys[i]) {
+//                c = c->Pointers[i];
+//                break;
+//            }
+//            p -= c->Keys[i];
+//        }
+//    }
+//    int i = 0;
+//    for (; i < c->NumOfKeys; ++i) {
+//        if (p <= c->Keys[i]) {
+//            break;
+//        }
+//        p -= c->Keys[i];
+//    }
+//    p--;
+//    int k = 0;
+//    bool flag = false;
+//    while (k < realnum) {
+//        for (; i < c->NumOfKeys; ++i) {
+//            int * curarray = reinterpret_cast<int *>(c->Pointers[i]);
+//            for ( ; p < c->Keys[i]; ++p) {
+//                ans[k] = curarray[p];
+//                ++k;
+//                if (k == realnum) {
+//                    flag = true;
+//                    break;
+//                }
+//            }
+//            if (flag) {
+//                break;
+//            }
+//            p = 0;
+//        }
+//        if (flag) {
+//            break;
+//        }
+//        if (c->Next == nullptr) {
+//            printf("error\n");
+//        }
+//        c = c->Next;
+//        i = 0;
+//    }
+//    return ans;
+//}
+
+
+// use c++ copy function to accelerate
 int* DynamicArray::RangeQuery(int start, int end, int * lenOfAns) {
     int dastart = 1;
     int daend = NumItems;
@@ -170,13 +239,15 @@ int* DynamicArray::RangeQuery(int start, int end, int * lenOfAns) {
     while (k < realnum) {
         for (; i < c->NumOfKeys; ++i) {
             int * curarray = reinterpret_cast<int *>(c->Pointers[i]);
-            for ( ; p < c->Keys[i]; ++p) {
-                ans[k] = curarray[p];
-                ++k;
-                if (k == realnum) {
-                    flag = true;
-                    break;
-                }
+            if (k + c->Keys[i] - p <= realnum) {
+                std::copy(curarray + p, curarray + c->Keys[i], ans + k);
+                k += c->Keys[i] - p;
+            } else {
+                int len = realnum - k;
+                std::copy(curarray + p, curarray + p + len, ans + k);
+                flag = true;
+                break;
+                k += len;
             }
             if (flag) {
                 break;
@@ -194,6 +265,7 @@ int* DynamicArray::RangeQuery(int start, int end, int * lenOfAns) {
     }
     return ans;
 }
+
 
 int DynamicArray::Query(int pos) const {
     if (pos > NumItems) {
@@ -226,7 +298,7 @@ int DynamicArray::Query(int pos) const {
 
 //make a leaf with capacity
 NodeDA * makeLeafonedp(int capacity) {
-    NodeDA * n = new NodeDA(capacity);
+        auto * n = new NodeDA(capacity);
     n->IsLeaf = true;
     return n;
 }
@@ -513,11 +585,11 @@ int DynamicArray::GetFanout() const {
     return Capacity;
 }
 
-int DynamicArray::GetNumItems() {
+int DynamicArray::GetNumItems() const {
     return NumItems;
 }
 
-void DynamicArray::insertMulKeysIntoLeaf(int * keysToInsert, NodeDA ** pointersToInsert,
+void DynamicArray::insertMulKeysIntoLeaf(const int * keysToInsert, NodeDA ** pointersToInsert,
                                          int numKeysToInsert, NodeDA * toLeaf, int toIndex) {
     int newNumKeys = numKeysToInsert + toLeaf->NumOfKeys;
     int startInsertedIdx = toIndex, endInsertedIdx = startInsertedIdx + numKeysToInsert - 1;
@@ -537,11 +609,11 @@ void DynamicArray::insertMulKeysIntoLeaf(int * keysToInsert, NodeDA ** pointersT
 //note that in some cases, we inserting into beginning/end of a node, mostly happening in swap/move
 //when insert into the beginning, we need to make pointer toLeaf still point to the second leaf
 //return true if toIndex == 0
-bool DynamicArray::insertMulKeysIntoLeafAfterOneSplitting(int * keysToInsert, NodeDA ** pointersToInsert,
+bool DynamicArray::insertMulKeysIntoLeafAfterOneSplitting(const int * keysToInsert, NodeDA ** pointersToInsert,
                                                           int numKeysToInsert, NodeDA * toLeaf, int toIndex) {
     int numGoRight = toLeaf->NumOfKeys - toIndex;
     int * keysGoRight = new int[numGoRight];
-    NodeDA ** pointersGoRight = new NodeDA *[numGoRight];
+    auto ** pointersGoRight = new NodeDA *[numGoRight];
     for (int i = 0; i < numGoRight; ++i) {
         pointersGoRight[i] = toLeaf->Pointers[i + toIndex];
         keysGoRight[i] = toLeaf->Keys[i+toIndex];
@@ -632,7 +704,6 @@ void DynamicArray::insertOneIntoLeaf(NodeDA * leaf, int * newPointer, int length
             }
         }
     }
-    return;
 }
 
 
@@ -819,7 +890,7 @@ int DynamicArray::NodeSumKeys(NodeDA * n) {
     return ans;
 }
 
-int DynamicArray::getLeftIndex(NodeDA * parent, NodeDA * left) {
+int DynamicArray::getLeftIndex(NodeDA * parent, NodeDA * left) const {
     int leftIndex = 0;
     while(leftIndex < Capacity && parent->Pointers[leftIndex] != left) {
         leftIndex += 1;
@@ -837,7 +908,6 @@ void DynamicArray::insertIntoNewRoot(NodeDA * left, int sumKeysLeft, NodeDA * ri
     left->Parent = Root;
     right->Parent = Root;
     Root->NumOfKeys = 2;
-    return;
 }
 
 /*
@@ -1202,7 +1272,6 @@ void DynamicArray::insertOneIntoLeafForDeletion(NodeDA * leaf, int * newa, int l
             }
         }
     }
-    return;
 }
 
 
@@ -1268,12 +1337,12 @@ NodeDA * DynamicArray::coalesceNodes(NodeDA * n, NodeDA * neighbour, int neighbo
     if (n->IsLeaf) {
         neighbour->Next = n->Next;
     }
-    delete n;
     deleteEntry(neighbour->Parent, n_index);
+    delete n;
     return neighbour;
 }
 
-int DynamicArray::getLeftNeighborIndex(NodeDA * n) {
+int DynamicArray::getLeftNeighborIndex(NodeDA * n) const {
     int i = 0, nei = -1;
     NodeDA * parent = n->Parent;
     for (i = 0; i < Capacity; ++i) {
@@ -1369,7 +1438,6 @@ void DynamicArray::redistributeNodes(NodeDA * n, NodeDA * neighbour, int neighbo
         c->Keys[leftIndex+1] = rightSumKeys;
     }
     AdjustAncestorKeysAccordingToCurNode(c);
-    return;
 }
 
 void DynamicArray::adjustRoot() {
@@ -1387,7 +1455,6 @@ void DynamicArray::adjustRoot() {
         newRoot->Parent = nullptr;
         Root = newRoot;
     }
-    return;
 }
 
 
@@ -1410,7 +1477,7 @@ NodeDA * DynamicArray::removeEntryFromNode(NodeDA * n, int indexInNode) {
     return n;
 }
 
-void DynamicArray::Reorder(int start, int end, int* neworder) {
+void DynamicArray::Reorder(int start, int end, const int* neworder) {
     if (end > NumItems) {
         printf("Error: index exceeds limit!\n");
         return;
@@ -1637,7 +1704,7 @@ void DynamicArray::redistributeNodesForDeleteOperation(NodeDA * n, NodeDA * neig
             }
         }
     }
-    return;
+
 }
 
 void DynamicArray::CutArray(int pos) {
@@ -1733,8 +1800,8 @@ void DynamicArray::Swap(int start1, int end1, int start2, int end2) {
     CutArray(end1+1);
     CutArray(start2);
     CutArray(end2+1);
-    // printf("after cutarray:\n");
-    // PrintTree();
+    //printf("after cutarray:\n");
+    //PrintTree();
     int numLeaf1, numLeaf2, startIndexLeaf1, startIndexLeaf2, endIndexLeaf1, endIndexLeaf2;
     NodeDA ** inter1 = nullptr;
     NodeDA ** inter2 = nullptr;
@@ -2472,7 +2539,7 @@ void DynamicArray::swapWholeLeafAndGoUpwards(NodeDA **wholeLeaf1, NodeDA **whole
 }
 
 
-void DynamicArray::exchangeLeaf(NodeDA * LeftLeaf, NodeDA * LeftParent, NodeDA * RightLeaf, NodeDA * RightParent){
+void DynamicArray::exchangeLeaf(NodeDA * LeftLeaf, NodeDA * LeftParent, NodeDA * RightLeaf, NodeDA * RightParent) const{
     int index1 = -1, index2 = -1, key1 = -1, key2 = -1;
     for (int i = 0; i < Capacity; i++) {
         if (LeftParent->Pointers[i] == LeftLeaf) {
@@ -2500,7 +2567,7 @@ void DynamicArray::exchangeLeaf(NodeDA * LeftLeaf, NodeDA * LeftParent, NodeDA *
 
 NodeDA * DynamicArray::movePointerAfter(NodeDA * fromLeaf, int startIndex, int endIndex, NodeDA * toLeaf, int toIndex) {
     int * keysToInsert = new int[Capacity];
-    NodeDA ** pointersToInsert = new NodeDA *[Capacity];
+    auto ** pointersToInsert = new NodeDA *[Capacity];
     for (int i = startIndex; i <= endIndex; i++) {
         keysToInsert[i-startIndex] = fromLeaf->Keys[i];
         pointersToInsert[i-startIndex] = fromLeaf->Pointers[i];
@@ -2588,7 +2655,6 @@ void DynamicArray::insertMulLeavesIntoLeafParent(NodeDA * toParent, int startInd
         return;
     }
     AdjustAncestorKeyForOneNode(toParent);
-    return;
 }
 
 
@@ -2628,7 +2694,7 @@ void DynamicArray::insertMulLeavesIntoLeafParentSplitOnce(NodeDA * toParent, int
     int leftNum = allNum / 2;
     int rightNum = allNum - leftNum;
     int leftSum = 0, rightSum = 0;
-    NodeDA ** allLeaf = new NodeDA *[Capacity + numLeafToInsert];
+    auto ** allLeaf = new NodeDA *[Capacity + numLeafToInsert];
     int * allKeys = new int[Capacity + numLeafToInsert];
     int j = 0;
     for (int i = 0; i < startIndexInParent; i++) {
@@ -2655,7 +2721,7 @@ void DynamicArray::insertMulLeavesIntoLeafParentSplitOnce(NodeDA * toParent, int
         s++;
     }
     toParent->NumOfKeys = leftNum;
-    NodeDA * newn = new NodeDA(Capacity);
+    auto * newn = new NodeDA(Capacity);
     for (int l = 0; l < rightNum; ++l) {
         newn->Pointers[l] = allLeaf[s];
         newn->Pointers[l]->Parent = newn;
@@ -2710,7 +2776,7 @@ void DynamicArray::insertMulLeavesIntoLeafParentAfterSplitting(NodeDA * toParent
 
     //set pointers after startIndexInParent in toParent
     int numToParentAfterInsert = toParent->NumOfKeys - startIndexInParent;
-    NodeDA ** leafInToParentTail = new NodeDA *[numToParentAfterInsert];
+    auto ** leafInToParentTail = new NodeDA *[numToParentAfterInsert];
     for (int k = startIndexInParent; k < toParent->NumOfKeys; ++k) {
         leafInToParentTail[k-startIndexInParent] = toParent->Pointers[k];
         toParent->Pointers[k] = leafToInsert[k-startIndexInParent];
@@ -2731,7 +2797,7 @@ void DynamicArray::insertMulLeavesIntoLeafParentAfterSplitting(NodeDA * toParent
         numInSecondLast = (remainNumLeaf + Capacity)/2;
         numInLast = remainNumLeaf + Capacity - numInSecondLast;
     }
-    NodeDA ** parentNewSibling = new NodeDA *[parentNewSiblingNum];
+    auto ** parentNewSibling = new NodeDA *[parentNewSiblingNum];
     int LeafToInsertIdx = numToParentAfterInsert;
     int leafInToParentTailIdx = 0;
     for (int k = 0; k < parentNewSiblingNum; ++k) {
@@ -2809,7 +2875,7 @@ void DynamicArray::insertMulIntoParent(NodeDA * toParent, NodeDA ** parentNewSib
 
 void DynamicArray::insertMulIntoNodeAfterSplitting(NodeDA * parent, int toIndex, NodeDA ** pointerToInsert,
                                                    int pointerToInsertNum) {
-    NodeDA ** allPointers = new NodeDA *[Capacity + pointerToInsertNum];
+    auto ** allPointers = new NodeDA *[Capacity + pointerToInsertNum];
     int j = 0;
     for (int i = 0; i < toIndex; i++) {
         allPointers[j] = parent->Pointers[i];
@@ -2841,7 +2907,7 @@ void DynamicArray::insertMulIntoNodeAfterSplitting(NodeDA * parent, int toIndex,
         if (remainNumLeaf != 0) {
             parentNewSiblingNum++;
         }
-        NodeDA ** parentNewSibling = new NodeDA *[parentNewSiblingNum];
+        auto ** parentNewSibling = new NodeDA *[parentNewSiblingNum];
         for (int k = 0; k < parentNewSiblingNum; k++) {
             parentNewSibling[k] = new NodeDA(Capacity);
             for (int y = 0; y < Capacity; y++) {
@@ -2889,7 +2955,7 @@ void DynamicArray::insertMulIntoNodeAfterSplitting(NodeDA * parent, int toIndex,
             }
         }
         //set parent's new siblings
-        NodeDA **parentNewSibling = new NodeDA *[parentNewSiblingNum];
+        auto **parentNewSibling = new NodeDA *[parentNewSiblingNum];
         for (int k = 0; k < parentNewSiblingNum; k++) {
             parentNewSibling[k] = new NodeDA(Capacity);
             if (k == parentNewSiblingNum-1) { // the last one
@@ -2936,7 +3002,7 @@ void DynamicArray::insertMulIntoNodeAfterSplitting(NodeDA * parent, int toIndex,
 
 void DynamicArray::insertMulIntoNode(NodeDA * parent, int toIndex, NodeDA ** parentNewSibling,
                                      int parentNewSiblingNum, int ParentIncrease) {
-    NodeDA ** tmpNodes = new NodeDA *[Capacity];
+    auto ** tmpNodes = new NodeDA *[Capacity];
     int i = toIndex;
     int i_tmpNodes = 0;
     for (int j = 0; j < parentNewSiblingNum; j++) {
@@ -2992,9 +3058,9 @@ void DynamicArray::insertMulIntoNewRoot(NodeDA * toParent, NodeDA ** parentNewSi
         return;
     }
     if (totalNum%Capacity == 0) { //all full nodes
-        NodeDA * leftNode = new NodeDA(Capacity);
+        auto * leftNode = new NodeDA(Capacity);
         int rightSiblingNum = numFullNodes - 1;
-        NodeDA ** rightSibling = new NodeDA *[rightSiblingNum];
+        auto ** rightSibling = new NodeDA *[rightSiblingNum];
         int i_rightchild = 0;
         // set keys/pointers in leftNode
         leftNode->Pointers[0] = toParent;
@@ -3021,14 +3087,14 @@ void DynamicArray::insertMulIntoNewRoot(NodeDA * toParent, NodeDA ** parentNewSi
         insertMulIntoNewRoot(leftNode, rightSibling, rightSiblingNum);
         delete []rightSibling;
     } else { // not all full nodes
-        NodeDA * leftNode = new NodeDA(Capacity);
+        auto * leftNode = new NodeDA(Capacity);
         leftNode->Pointers[0] = toParent;
         leftNode->Keys[0] = NodeSumKeys(toParent);
         leftNode->NumOfKeys = 1;
         toParent->Parent = leftNode;
         int rightSiblingNum = numFullNodes;
         numFullNodes--;
-        NodeDA ** rightSibling = new NodeDA *[rightSiblingNum];
+        auto ** rightSibling = new NodeDA *[rightSiblingNum];
         int i_rightchild = 0;
         int remainer = totalNum % Capacity;
         int min_keys = Min;
@@ -3332,7 +3398,7 @@ NodeDA * DynamicArray::adjustAfterDeleteKeysInNode(NodeDA * fromLeaf, int numKey
 // return previous of the first deleted leaf
 NodeDA * DynamicArray::deleteMulEntry(NodeDA ** entryToDelete, int numEntryToDelete){
     NodeDA * pre = findPrevious(entryToDelete[0]);
-    NodeDA ** newEntryToDelete = new NodeDA *[numEntryToDelete/Min+2];
+    auto ** newEntryToDelete = new NodeDA *[numEntryToDelete/Min+2];
     int i_newEntryToDelete = 0;
     NodeDA * lastParent = entryToDelete[0]->Parent;
     NodeDA * FirstParent = lastParent;
@@ -3453,7 +3519,7 @@ void DynamicArray::adjustAncestorKeysAfterExchangingLeaves(NodeDA ** nodeArray, 
         }
         return; //root
     }
-    NodeDA ** newArray = new NodeDA *[numNodeInArray];
+    auto ** newArray = new NodeDA *[numNodeInArray];
     int numNewArray = 0;
     NodeDA * lastParent = nullptr, * parent = nullptr;
     lastParent = nullptr;
@@ -3486,7 +3552,7 @@ void DynamicArray::swapHeadTail11(NodeDA * inter1, int startIndexLeaf1, int endI
 
     int num = endIndexLeaf2 - startIndexLeaf1 + 1;
     int * Keys = new int[num];
-    NodeDA ** Pointers = new NodeDA *[num];
+    auto ** Pointers = new NodeDA *[num];
     int ik = 0;
     for (int i = startIndexLeaf2; i <= endIndexLeaf2; i++) {
         Keys[ik] = inter1->Keys[i];
@@ -3509,7 +3575,7 @@ void DynamicArray::swapHeadTail11(NodeDA * inter1, int startIndexLeaf1, int endI
         inter1->Pointers[i] = Pointers[jk];
         jk++;
     }
-    NodeDA ** nodes = new NodeDA *[1];
+    auto ** nodes = new NodeDA *[1];
     nodes[0] = inter1;
     UpdateSumKeys(nodes, 1);
     delete []nodes;
@@ -3522,7 +3588,7 @@ void DynamicArray::swapHeadTail12(NodeDA * inter1, NodeDA * inter2, int startInd
                                   int startIndexLeaf2, int endIndexLeaf2) {
     int num =  endIndexLeaf2 + 1 + inter1->NumOfKeys-startIndexLeaf1;
     int * Keys = new int[num];
-    NodeDA ** Pointers = new NodeDA *[num];
+    auto ** Pointers = new NodeDA *[num];
     int  ik = 0;
     for (int i = startIndexLeaf2; i < inter1->NumOfKeys; i++) {
         Keys[ik] = inter1->Keys[i];
@@ -3555,7 +3621,7 @@ void DynamicArray::swapHeadTail12(NodeDA * inter1, NodeDA * inter2, int startInd
         inter2->Pointers[i] = Pointers[jk];
         jk++;
     }
-    NodeDA ** nodes = new NodeDA *[2];
+    auto ** nodes = new NodeDA *[2];
     nodes[0] = inter1;
     nodes[1] = inter2;
     UpdateSumKeys(nodes, 2);
@@ -3569,7 +3635,7 @@ void DynamicArray::swapHeadTail21(NodeDA * inter1, NodeDA * inter2, int startInd
                                   int startIndexLeaf2, int endIndexLeaf2) {
     int num =  endIndexLeaf2 + 1 + inter1->NumOfKeys-startIndexLeaf1;
     int * Keys = new int[num];
-    NodeDA ** Pointers = new NodeDA *[num];
+    auto ** Pointers = new NodeDA *[num];
     int ik = 0;
     for (int i = startIndexLeaf2; i <= endIndexLeaf2; i++) {
         Keys[ik] = inter2->Keys[i];
@@ -3602,7 +3668,7 @@ void DynamicArray::swapHeadTail21(NodeDA * inter1, NodeDA * inter2, int startInd
         inter2->Pointers[i] = Pointers[jk];
         jk++;
     }
-    NodeDA ** nodes = new NodeDA *[2];
+    auto ** nodes = new NodeDA *[2];
     nodes[0] = inter1;
     nodes[1] = inter2;
     UpdateSumKeys(nodes, 2);
@@ -3616,7 +3682,7 @@ void DynamicArray::swapHeadTail22(NodeDA * inter1, NodeDA * inter2, NodeDA * int
                                   int endIndexLeaf1, int startIndexLeaf2, int endIndexLeaf2) {
     int num =  endIndexLeaf2+1 + inter2->NumOfKeys + inter1->NumOfKeys-startIndexLeaf1;
     int * Keys = new int[num];
-    NodeDA ** Pointers = new NodeDA *[num];
+    auto ** Pointers = new NodeDA *[num];
     int ik = 0;
     for (int i = startIndexLeaf2; i < inter2->NumOfKeys; i++) {
         Keys[ik] = inter2->Keys[i];
@@ -3660,7 +3726,7 @@ void DynamicArray::swapHeadTail22(NodeDA * inter1, NodeDA * inter2, NodeDA * int
         inter3->Pointers[i] = Pointers[jk];
         jk++;
     }
-    NodeDA ** nodes = new NodeDA *[3];
+    auto ** nodes = new NodeDA *[3];
     nodes[0] = inter1;
     nodes[1] = inter2;
     nodes[2] = inter3;
@@ -3675,7 +3741,7 @@ void DynamicArray::swapHeadTailLen1Is1(NodeDA **inter2, int numLeaf2, int startI
                                        int endIndexLeaf1, int startIndexLeaf2, int endIndexLeaf2) {
     int NumToMove = startIndexLeaf2 - startIndexLeaf1;
     int* KeysToMove = new int[NumToMove];
-    NodeDA ** Pointers = new NodeDA *[NumToMove];
+    auto ** Pointers = new NodeDA *[NumToMove];
     int ik = 0;
     for (int i = endIndexLeaf1 + 1; i < startIndexLeaf2; i++) {
         KeysToMove[ik] = inter2[0]->Keys[i];
@@ -3704,7 +3770,7 @@ void DynamicArray::swapHeadTailLen2Is1(NodeDA **inter1, int numLeaf1, int startI
     NodeDA * n = inter1[numLeaf1-1];
     int NumToMove = endIndexLeaf2 - endIndexLeaf1;
     int* KeysToMove = new int[NumToMove];
-    NodeDA ** Pointers = new NodeDA *[NumToMove];
+    auto ** Pointers = new NodeDA *[NumToMove];
     int ik = 0;
     for (int i = startIndexLeaf2; i <= endIndexLeaf2; i++) {
         KeysToMove[ik] = n->Keys[i];
@@ -3733,7 +3799,7 @@ void DynamicArray::swapHeadTailLen1Is2(NodeDA **inter1, NodeDA ** inter2, int nu
     NodeDA * n = inter1[0];
     int NumToMove = startIndexLeaf2 + inter1[0]->NumOfKeys-startIndexLeaf1;
     int* KeysToMove = new int[NumToMove];
-    NodeDA ** Pointers = new NodeDA *[NumToMove];
+    auto ** Pointers = new NodeDA *[NumToMove];
     int ik = 0;
     for (int i = endIndexLeaf1 + 1; i < startIndexLeaf2; i++) {
         KeysToMove[ik] = inter2[0]->Keys[i];
@@ -3765,7 +3831,7 @@ void DynamicArray::swapHeadTailLen2Is2(NodeDA **inter1, NodeDA ** inter2, int nu
                                        int startIndexLeaf1, int endIndexLeaf1, int startIndexLeaf2, int endIndexLeaf2) {
     NodeDA * n = inter2[0];
     int NumToMove = endIndexLeaf2 + 1 + inter2[0]->NumOfKeys-endIndexLeaf1-1;
-    NodeDA ** Pointers = new NodeDA *[NumToMove];
+    auto ** Pointers = new NodeDA *[NumToMove];
     int* KeysToMove = new int[NumToMove];
     int ik = 0;
     for (int i = startIndexLeaf2; i < n->NumOfKeys; i++) {
@@ -3799,7 +3865,7 @@ void DynamicArray::SwapRangesAdjacentWhenLensAreBoth2(NodeDA **inter1, NodeDA **
                                                       int startIndexLeaf1, int endIndexLeaf1, int startIndexLeaf2, int endIndexLeaf2) {
     int num =  inter1[0]->NumOfKeys-startIndexLeaf1 + inter1[1]->NumOfKeys + inter2[0]->NumOfKeys + endIndexLeaf2+1;
     int * keys = new int[num];
-    NodeDA ** Pointers = new NodeDA *[num];
+    auto ** Pointers = new NodeDA *[num];
     int tk = 0;
     for (int i = startIndexLeaf2; i < inter2[0]->NumOfKeys; i++) {
         keys[tk] = inter2[0]->Keys[i];
@@ -3852,7 +3918,7 @@ void DynamicArray::SwapRangesAdjacentWhenLensAreBoth2(NodeDA **inter1, NodeDA **
         inter2[1]->Pointers[i] = Pointers[tk];
         tk++;
     }
-    NodeDA ** nodes = new NodeDA *[4];
+    auto ** nodes = new NodeDA *[4];
     nodes[0] = inter1[0];
     nodes[1] = inter1[1];
     nodes[2] = inter2[0];
@@ -3919,7 +3985,7 @@ void DynamicArray::SwapRangesAdjacentRightIs2(NodeDA **inter1, NodeDA ** inter2,
                                               int startIndexLeaf1, int endIndexLeaf1, int startIndexLeaf2, int endIndexLeaf2) {
     int num =  endIndexLeaf2 +1 + inter2[0]->NumOfKeys + inter1[numLeaf1-1]->NumOfKeys - endIndexLeaf1-1;
     int * keys = new int[num];
-    NodeDA ** Pointers = new NodeDA *[num];
+    auto ** Pointers = new NodeDA *[num];
     int tk = 0;
     for (int i = startIndexLeaf2; i < inter2[0]->NumOfKeys; i++) {
         keys[tk] = inter2[0]->Keys[i];
@@ -3964,7 +4030,7 @@ void DynamicArray::SwapRangesAdjacentLeftIs2(NodeDA **inter1, NodeDA ** inter2, 
                                              int startIndexLeaf1, int endIndexLeaf1, int startIndexLeaf2, int endIndexLeaf2) {
     int num =  startIndexLeaf2 + inter1[1]->NumOfKeys + inter1[0]->NumOfKeys - startIndexLeaf1;
     int * keys = new int[num];
-    NodeDA ** Pointers = new NodeDA *[num];
+    auto ** Pointers = new NodeDA *[num];
     int tk = 0;
     for (int i = endIndexLeaf1 + 1; i < inter1[1]->NumOfKeys; i++) {
         keys[tk] = inter1[1]->Keys[i];
@@ -3987,7 +4053,7 @@ void DynamicArray::SwapRangesAdjacentLeftIs2(NodeDA **inter1, NodeDA ** inter2, 
         tk++;
     }
     //delete
-    NodeDA ** LeafToDelete = new NodeDA *[1];
+    auto ** LeafToDelete = new NodeDA *[1];
     LeafToDelete[0] = inter1[1];
     inter1[0]->Next = inter1[1]->Next;
     /*
@@ -4011,7 +4077,7 @@ void DynamicArray::SWapRangesAdjacentWhenLensAreBoth1(NodeDA * leftnode, NodeDA 
                                                       int endIndexLeaf1, int startIndexLeaf2, int endIndexLeaf2) {
     int num =  endIndexLeaf2+1+leftnode->NumOfKeys-startIndexLeaf1;
     int * keys = new int[num];
-    NodeDA ** Pointers = new NodeDA *[num];
+    auto ** Pointers = new NodeDA *[num];
     int tk = 0;
     for (int i = startIndexLeaf2; i <= endIndexLeaf2; i++) {
         keys[tk] = rightnode->Keys[i];
@@ -4044,14 +4110,13 @@ void DynamicArray::SWapRangesAdjacentWhenLensAreBoth1(NodeDA * leftnode, NodeDA 
         rightnode->Pointers[i] = Pointers[tk];
         tk++;
     }
-    NodeDA ** ns = new NodeDA *[2];
+    auto ** ns = new NodeDA *[2];
     ns[0] = leftnode;
     ns[1] = rightnode;
     UpdateSumKeys(ns, 2);
     delete []ns;
     delete []Pointers;
     delete []keys;
-    return;
 }
 
 
@@ -4059,7 +4124,7 @@ void DynamicArray::SWapRangesAdjacentWhenLensAre1And2(NodeDA * leftnode, NodeDA 
                                                       int startIndexLeaf1, int endIndexLeaf1, int startIndexLeaf2, int endIndexLeaf2) {
     int num =  endIndexLeaf2+1+right1->NumOfKeys+leftnode->NumOfKeys-startIndexLeaf1;
     int * keys = new int[num];
-    NodeDA ** Pointers = new NodeDA *[num];
+    auto ** Pointers = new NodeDA *[num];
     int tk = 0;
     for (int i = startIndexLeaf2; i < right1->NumOfKeys; i++) {
         keys[tk] = right1->Keys[i];
@@ -4103,7 +4168,7 @@ void DynamicArray::SWapRangesAdjacentWhenLensAre1And2(NodeDA * leftnode, NodeDA 
         right2->Pointers[i] = Pointers[tk];
         tk++;
     }
-    NodeDA ** ns = new NodeDA *[3];
+    auto ** ns = new NodeDA *[3];
     ns[0] = leftnode;
     ns[1] = right1;
     ns[2] = right2;
@@ -4118,7 +4183,7 @@ void DynamicArray::SwapRangesAdjacentWhenLensAre2And1(NodeDA * left1, NodeDA * l
                                                       int startIndexLeaf1, int endIndexLeaf1, int startIndexLeaf2, int endIndexLeaf2) {
     int num =  endIndexLeaf2+1 + left2->NumOfKeys + left1->NumOfKeys-startIndexLeaf1;
     int * keys = new int[num];
-    NodeDA ** Pointers = new NodeDA *[num];
+    auto ** Pointers = new NodeDA *[num];
     int tk = 0;
     for (int i = startIndexLeaf2; i <= endIndexLeaf2; i++) {
         keys[tk] = right->Keys[i];
@@ -4163,7 +4228,7 @@ void DynamicArray::SwapRangesAdjacentWhenLensAre2And1(NodeDA * left1, NodeDA * l
         tk++;
     }
 
-    NodeDA ** ns = new NodeDA *[3];
+    auto ** ns = new NodeDA *[3];
     ns[0] = left1;
     ns[1] = left2;
     ns[2] = right;
@@ -4179,7 +4244,7 @@ void DynamicArray::SwapRangesAdjacentWhenLeftIs1(NodeDA * left, NodeDA ** inter2
                                                  int startIndexLeaf1, int endIndexLeaf1, int startIndexLeaf2, int endIndexLeaf2) {
     int NumToMove = startIndexLeaf2 + left->NumOfKeys - startIndexLeaf1;
     int * keys = new int[NumToMove];
-    NodeDA ** Pointers = new NodeDA *[NumToMove];
+    auto ** Pointers = new NodeDA *[NumToMove];
     int tk = 0;
     for (int i = endIndexLeaf1 + 1; i < left->NumOfKeys; i++) {
         keys[tk] = left->Keys[i];
@@ -4210,7 +4275,7 @@ void DynamicArray::SwapRangesAdjacentWhenRightIs1(NodeDA **inter1, int numLeaf1,
                                                   int startIndexLeaf1, int endIndexLeaf1, int startIndexLeaf2, int endIndexLeaf2) {
     int numToMove = endIndexLeaf2+1 + inter1[numLeaf1-1]->NumOfKeys - endIndexLeaf1-1;
     int * keys = new int[numToMove];
-    NodeDA ** Pointers = new NodeDA *[numToMove];
+    auto ** Pointers = new NodeDA *[numToMove];
     int tk = 0;
     for (int i = startIndexLeaf2; i <= endIndexLeaf2; i++) {
         keys[tk] = right->Keys[i];
@@ -4278,7 +4343,7 @@ void DynamicArray::SwapRangesAdjacent(NodeDA ** inter1, NodeDA ** inter2, int nu
 
     int numToMove1 = endIndexLeaf1 + 1 + inter2[numLeaf2-1]->NumOfKeys - endIndexLeaf2 - 1;
     int* KeyToMove1 = new int[numToMove1];
-    NodeDA ** PointerToMove1 = new NodeDA *[numToMove1];
+    auto ** PointerToMove1 = new NodeDA *[numToMove1];
     int i1 = 0;
     for (int i = 0; i <= endIndexLeaf1; i++) {
         KeyToMove1[i1] = inter1[numLeaf1-1]->Keys[i];
@@ -4293,7 +4358,7 @@ void DynamicArray::SwapRangesAdjacent(NodeDA ** inter1, NodeDA ** inter2, int nu
 
     int numToMove2 = startIndexLeaf1 + inter2[0]->NumOfKeys - startIndexLeaf2;
     int * KeyToMove2 = new int[numToMove2];
-    NodeDA ** PointerToMove2 = new NodeDA *[numToMove2];
+    auto ** PointerToMove2 = new NodeDA *[numToMove2];
     int i2 = 0;
     for (int i = 0; i < startIndexLeaf1; i++) {
         KeyToMove2[i2] = inter1[0]->Keys[i];
@@ -4318,7 +4383,7 @@ void DynamicArray::SwapRangesAdjacent(NodeDA ** inter1, NodeDA ** inter2, int nu
     //middle pointers
     int NumMiddlePointers = (inter1[numLeaf1-1]->NumOfKeys - endIndexLeaf1 - 1) + (startIndexLeaf2);
     int * Middlekeys = new int[NumMiddlePointers];
-    NodeDA ** Middlepointers = new NodeDA *[NumMiddlePointers];
+    auto ** Middlepointers = new NodeDA *[NumMiddlePointers];
     int mi = 0;
     for (int i = endIndexLeaf1 + 1; i < inter1[numLeaf1-1]->NumOfKeys; i++) {
         Middlekeys[mi] = inter1[numLeaf1-1]->Keys[i];
@@ -4334,7 +4399,7 @@ void DynamicArray::SwapRangesAdjacent(NodeDA ** inter1, NodeDA ** inter2, int nu
     //delete two leaves in the middle
     inter1[numLeaf1-1]->NumOfKeys=0;
     inter2[0]->NumOfKeys=0;
-    NodeDA ** ToDelete = new NodeDA *[2];
+    auto ** ToDelete = new NodeDA *[2];
     ToDelete[0] = inter1[numLeaf1-1];
     ToDelete[1] = inter2[0];
 
@@ -4381,11 +4446,11 @@ bool DynamicArray::insertKeysIntoLeaf(int * keysToInsert, NodeDA ** pointersToIn
 }
 
 //split maybe more than once
-void DynamicArray::insertMulKeysIntoLeafAfterMulSplitting(int * keysToInsert, NodeDA ** pointersToInsert,
+void DynamicArray::insertMulKeysIntoLeafAfterMulSplitting(const int * keysToInsert, NodeDA ** pointersToInsert,
                                                           int numKeysToInsert, NodeDA * toLeaf, int toIndex) {
     int totalNumKeys = numKeysToInsert + toLeaf->NumOfKeys;
     int * newKeys = new int[totalNumKeys];
-    NodeDA ** newPointers = new NodeDA *[totalNumKeys];
+    auto ** newPointers = new NodeDA *[totalNumKeys];
     int i = 0;
     for (int j = 0; j < toIndex; j++) {
         newKeys[i] = toLeaf->Keys[j];
@@ -4416,7 +4481,7 @@ void DynamicArray::insertMulKeysIntoLeafAfterMulSplitting(int * keysToInsert, No
         if (remainNumLeaf != 0) {
             parentNewSiblingNum++;
         }
-        NodeDA ** parentNewSibling = new NodeDA *[parentNewSiblingNum];
+        auto ** parentNewSibling = new NodeDA *[parentNewSiblingNum];
         for (int k = 0; k < parentNewSiblingNum; k++) {
             parentNewSibling[k] = makeLeafonedp(Capacity);
             for (int y = 0; y < Capacity; y++) {
@@ -4465,7 +4530,7 @@ void DynamicArray::insertMulKeysIntoLeafAfterMulSplitting(int * keysToInsert, No
             toLeaf->NumOfKeys = Capacity;
         }
         //set parent's new siblings
-        NodeDA ** parentNewSibling  = new NodeDA *[parentNewSiblingNum];
+        auto ** parentNewSibling  = new NodeDA *[parentNewSiblingNum];
         for (int k = 0; k < parentNewSiblingNum; k++) {
             parentNewSibling[k] = makeLeafonedp(Capacity);
             if (k == parentNewSiblingNum-1) { // the last one
@@ -4524,7 +4589,7 @@ void DynamicArray::SwapWhenLeftLenIs2(NodeDA * left1, NodeDA * left2, int startI
 
     //insert keys at the end of inter2[0] to the beginning of inter2[1], without deleting these keys
     int numToInsert20 = inter2[0]->NumOfKeys - startIndexLeaf2;
-    NodeDA ** pointersToInsert20 = new NodeDA *[numToInsert20];
+    auto ** pointersToInsert20 = new NodeDA *[numToInsert20];
     int * keysToInset20 = new int[numToInsert20];
     for (int i = startIndexLeaf2; i < inter2[0]->NumOfKeys; ++i) {
         pointersToInsert20[i-startIndexLeaf2] = inter2[0]->Pointers[i];
@@ -4537,7 +4602,7 @@ void DynamicArray::SwapWhenLeftLenIs2(NodeDA * left1, NodeDA * left2, int startI
 
     //insert keys at the beginning of inter2[numLeaf2-1] to the end of inter2[numLeaf2-2], without deleting these keys
     int numToInsert22 = endIndexLeaf2 + 1;
-    NodeDA ** pointersToInsert22 = new NodeDA *[numToInsert22];
+    auto ** pointersToInsert22 = new NodeDA *[numToInsert22];
     int * keysToInset22 = new int[numToInsert22];
     for (int j = 0; j <= endIndexLeaf2; ++j) {
         pointersToInsert22[j] = inter2[numLeaf2-1]->Pointers[j];
@@ -4547,7 +4612,7 @@ void DynamicArray::SwapWhenLeftLenIs2(NodeDA * left1, NodeDA * left2, int startI
 
     //keys and pointers of left1, left2
     int numToMoveInLeft = left1->NumOfKeys - startIndexLeaf1 + endIndexLeaf1 + 1;
-    NodeDA ** pointersToMoveInLeft = new NodeDA *[numToMoveInLeft];
+    auto ** pointersToMoveInLeft = new NodeDA *[numToMoveInLeft];
     int * keysToMoveInLeft = new int[numToMoveInLeft];
     int idxToMoveInLeft = 0;
     for (int i = startIndexLeaf1; i < left1->NumOfKeys; ++i) {
@@ -4671,7 +4736,7 @@ void DynamicArray::SwapWhenBothLensAre2(NodeDA * left1, NodeDA * left2, int star
 
     if (len1 < len21) {
         int * keys1 = new int[len1];
-        NodeDA ** pointers1 = new NodeDA *[len1];
+        auto ** pointers1 = new NodeDA *[len1];
         int ikeys1 = 0;
         for (int i = startIndexLeaf1; i < left1->NumOfKeys; i++) {
             keys1[ikeys1]=left1->Keys[i];
@@ -4710,7 +4775,7 @@ void DynamicArray::SwapWhenBothLensAre2(NodeDA * left1, NodeDA * left2, int star
         int newstart2 = startIndexLeaf2+len1;
         int numKeysToMove = len2-len1;
         int * keysToMove = new int[numKeysToMove];
-        NodeDA ** pointersToMove = new NodeDA *[numKeysToMove];
+        auto ** pointersToMove = new NodeDA *[numKeysToMove];
         int ik = 0;
         for (int i = newstart2; i < right1->NumOfKeys; i++) {
             keysToMove[ik] = right1->Keys[i];
@@ -4732,7 +4797,7 @@ void DynamicArray::SwapWhenBothLensAre2(NodeDA * left1, NodeDA * left2, int star
         return;
     } else if (len1 == len21) {
         int * keys1 = new int[len1];
-        NodeDA ** pointers1 = new NodeDA *[len1];
+        auto ** pointers1 = new NodeDA *[len1];
         int ikeys1 = 0;
         for (int i = startIndexLeaf1; i < left1->NumOfKeys; i++) {
             keys1[ikeys1]=left1->Keys[i];
@@ -4767,7 +4832,7 @@ void DynamicArray::SwapWhenBothLensAre2(NodeDA * left1, NodeDA * left2, int star
         }
         int numKeysToMove = len22;
         int * keysToMove = new int[numKeysToMove];
-        NodeDA ** pointersToMove = new NodeDA *[numKeysToMove];
+        auto ** pointersToMove = new NodeDA *[numKeysToMove];
         int ik = 0;
         for (int i = 0; i <= endIndexLeaf2; i++) {
             keysToMove[ik] = right2->Keys[i];
@@ -4787,7 +4852,7 @@ void DynamicArray::SwapWhenBothLensAre2(NodeDA * left1, NodeDA * left2, int star
         return;
     } else if (len1 < len2) { // len2 > len1 > len21
         int * keys1 = new int[len1];
-        NodeDA ** pointers1 = new NodeDA *[len1];
+        auto ** pointers1 = new NodeDA *[len1];
         int ikeys1 = 0;
         for (int i = startIndexLeaf1; i < left1->NumOfKeys; i++) {
             keys1[ikeys1]=left1->Keys[i];
@@ -4838,7 +4903,7 @@ void DynamicArray::SwapWhenBothLensAre2(NodeDA * left1, NodeDA * left2, int star
         }
         int numKeysToMove = len2 - len1;
         int * keysToMove = new int[numKeysToMove];
-        NodeDA ** pointersToMove = new NodeDA *[numKeysToMove];
+        auto ** pointersToMove = new NodeDA *[numKeysToMove];
         int ik = 0;
         for (int i = newstart2; i <= endIndexLeaf2; i++) {
             keysToMove[ik] = right2->Keys[i];
@@ -4858,7 +4923,7 @@ void DynamicArray::SwapWhenBothLensAre2(NodeDA * left1, NodeDA * left2, int star
         return;
     } else if (len1 == len2) {
         int * keys1 = new int[len1];
-        NodeDA ** pointers1 = new NodeDA *[len1];
+        auto ** pointers1 = new NodeDA *[len1];
         int ikeys1 = 0;
         for (int i = startIndexLeaf1; i < left1->NumOfKeys; i++) {
             keys1[ikeys1]=left1->Keys[i];
@@ -4940,7 +5005,7 @@ void DynamicArray::SwapWhenBothLensAre1(NodeDA * leaf1, int startIndex1, int end
     } else if (numToMove1 < numToMove2) {
         int numKeys = numToMove2 - numToMove1;
         int * keys = new int[numKeys];
-        NodeDA ** pointers = new NodeDA *[numKeys];
+        auto ** pointers = new NodeDA *[numKeys];
         for (int i = 0; i < numKeys; ++i) {
             keys[i] = leaf2->Keys[startIndex2 + exchangeNum + i];
             pointers[i] = leaf2->Pointers[startIndex2 + exchangeNum + i];
@@ -4955,7 +5020,7 @@ void DynamicArray::SwapWhenBothLensAre1(NodeDA * leaf1, int startIndex1, int end
     } else { //numToMove1 > numToMove2
         int numKeys = numToMove1 - numToMove2;
         int * keys = new int[numKeys];
-        NodeDA ** pointers = new NodeDA *[numKeys];
+        auto ** pointers = new NodeDA *[numKeys];
         for (int i = 0; i < numKeys; ++i) {
             keys[i] = leaf1->Keys[startIndex1 + exchangeNum + i];
             pointers[i] = leaf1->Pointers[startIndex1 + exchangeNum + i];
@@ -4988,7 +5053,7 @@ void DynamicArray::SwapWhenLensAre1And2(NodeDA * leaf1, int startIndex1, int end
         }
         int numToMove = len2 - len1 + len3;
         int * keysToMove = new int[numToMove];
-        NodeDA ** pointersToMove = new NodeDA *[numToMove];
+        auto ** pointersToMove = new NodeDA *[numToMove];
         int tk = 0;
         for (int i = startIndex2 + len1; i < leaf2->NumOfKeys; i++) {
             keysToMove[tk] = leaf2->Keys[i];
@@ -5016,7 +5081,7 @@ void DynamicArray::SwapWhenLensAre1And2(NodeDA * leaf1, int startIndex1, int end
             leaf1->Pointers[startIndex1+i] = tmpp;
         }
         int * keysToMove = new int[len3];
-        NodeDA ** pointersToMove = new NodeDA *[len3];
+        auto ** pointersToMove = new NodeDA *[len3];
         for (int i = 0; i < len3; i++) {
             keysToMove[i] = leaf3->Keys[i];
             pointersToMove[i] = leaf3->Pointers[i];
@@ -5052,7 +5117,7 @@ void DynamicArray::SwapWhenLensAre1And2(NodeDA * leaf1, int startIndex1, int end
         }
         int NumKeysToMove = endIndex3 - newStartIn3 + 1;
         int * keysToMove = new int[NumKeysToMove];
-        NodeDA ** pointersToMove = new NodeDA *[NumKeysToMove];
+        auto ** pointersToMove = new NodeDA *[NumKeysToMove];
         for (int i = 0; i < NumKeysToMove; i++) {
             keysToMove[i] = leaf3->Keys[newStartIn3+i];
             pointersToMove[i] = leaf3->Pointers[newStartIn3+i];
@@ -5111,7 +5176,7 @@ void DynamicArray::SwapWhenLensAre1And2(NodeDA * leaf1, int startIndex1, int end
         int newStart3 = indexIn1;
         int NumToMove = len1 - len2 - len3;
         int* KeysToMove = new int[NumToMove];
-        NodeDA **PointersToMove = new NodeDA *[NumToMove];
+        auto **PointersToMove = new NodeDA *[NumToMove];
         for (int i = newStart3; i <= endIndex1; i++) {
             KeysToMove[i-newStart3] = leaf1->Keys[i];
             PointersToMove[i-newStart3] = leaf1->Pointers[i];
@@ -5215,7 +5280,7 @@ void DynamicArray::SwapForTailHead(NodeDA ** inter1, NodeDA ** inter2, int numLe
     swapWholeLeafAndGoUpwards(&inter1[1], &inter2[1], numLeaf1-2, numLeaf2-2);
     int numMidKeys = endIndexLeaf2+1 + startIndexLeaf2 - endIndexLeaf1 - 1 + inter1[0]->NumOfKeys - startIndexLeaf1;
     int * midKeys = new int[numMidKeys];
-    NodeDA ** midPointers = new NodeDA *[numMidKeys];
+    auto ** midPointers = new NodeDA *[numMidKeys];
     int midIdx = 0;
     for (int i = 0; i <= endIndexLeaf2; ++i) {
         midKeys[midIdx] = inter2[numLeaf2-1]->Keys[i];
@@ -5235,7 +5300,7 @@ void DynamicArray::SwapForTailHead(NodeDA ** inter1, NodeDA ** inter2, int numLe
 
     int numBegin2 = inter2[0]->NumOfKeys - startIndexLeaf2;
     int * keysBegin2 = new int[numBegin2];
-    NodeDA ** pointersBegin2 = new NodeDA *[numBegin2];
+    auto ** pointersBegin2 = new NodeDA *[numBegin2];
     for (int i = 0; i < numBegin2; ++i) {
         keysBegin2[i] = inter2[0]->Keys[startIndexLeaf2+i];
         pointersBegin2[i] = inter2[0]->Pointers[startIndexLeaf2+i];
@@ -5243,7 +5308,7 @@ void DynamicArray::SwapForTailHead(NodeDA ** inter1, NodeDA ** inter2, int numLe
 
     int numEnd1 = endIndexLeaf1+1;
     int * keysEnd1 = new int[numEnd1];
-    NodeDA ** pointersEnd1 = new NodeDA *[numEnd1];
+    auto ** pointersEnd1 = new NodeDA *[numEnd1];
     for (int i = 0; i < numEnd1; ++i) {
         keysEnd1[i] = inter1[numLeaf1-1]->Keys[i];
         pointersEnd1[i] = inter1[numLeaf1-1]->Pointers[i];
@@ -5278,7 +5343,7 @@ void DynamicArray::SwapWhenLenIs1(NodeDA * LoneLeaf, NodeDA **inter2, int numLea
     int numInRightPart = LoneLeaf->NumOfKeys - endIndexLeaf1 - 1;
     int numToInsertAfterFullLeaves = numInRightPart + endIndexLeaf2 + 1;
     int * keysToInsertAfterFullLeaves = new int[numToInsertAfterFullLeaves];// make([]int, NumInRightPart);
-    NodeDA ** pointersToInsertAfterFullLeaves = new NodeDA *[numToInsertAfterFullLeaves];// make([]interface{}, NumInRightPart);
+    auto ** pointersToInsertAfterFullLeaves = new NodeDA *[numToInsertAfterFullLeaves];// make([]interface{}, NumInRightPart);
     for (int i = 0; i <= endIndexLeaf2; ++i) {
         keysToInsertAfterFullLeaves[i] = inter2[numLeaf2-1]->Keys[i];
         pointersToInsertAfterFullLeaves[i] = inter2[numLeaf2-1]->Pointers[i];
@@ -5291,7 +5356,7 @@ void DynamicArray::SwapWhenLenIs1(NodeDA * LoneLeaf, NodeDA **inter2, int numLea
     //keys to move in LoneLeaf
     int numToMoveInLoneLeaf = endIndexLeaf1 - startIndexLeaf1 + 1;
     int * keysToMoveInLoneLeaf = new int[numToMoveInLoneLeaf];
-    NodeDA ** poitnersToMoveInLoneLeaf = new NodeDA *[numToMoveInLoneLeaf];
+    auto ** poitnersToMoveInLoneLeaf = new NodeDA *[numToMoveInLoneLeaf];
     for (int i = 0; i < numToMoveInLoneLeaf; ++i) {
         keysToMoveInLoneLeaf[i] = LoneLeaf->Keys[startIndexLeaf1+i];
         poitnersToMoveInLoneLeaf[i] = LoneLeaf->Pointers[startIndexLeaf1+i];
@@ -5299,7 +5364,7 @@ void DynamicArray::SwapWhenLenIs1(NodeDA * LoneLeaf, NodeDA **inter2, int numLea
     //keys to move in the beginning of inter2[0]
     int numToMoveInBeginInter2 = inter2[0]->NumOfKeys - startIndexLeaf2;
     int * keysToMoveInBeginInter2 = new int[numToMoveInBeginInter2];
-    NodeDA ** poitnersToMoveInBeginInter2 = new NodeDA *[numToMoveInBeginInter2];
+    auto ** poitnersToMoveInBeginInter2 = new NodeDA *[numToMoveInBeginInter2];
     for (int i = 0; i < numToMoveInBeginInter2; ++i) {
         keysToMoveInBeginInter2[i] = inter2[0]->Keys[startIndexLeaf2+i];
         poitnersToMoveInBeginInter2[i] = inter2[0]->Pointers[startIndexLeaf2+i];
@@ -5422,12 +5487,12 @@ void DynamicArray::RealMove(int startIndexLeaf1, int endIndexLeaf1, NodeDA ** in
         return;
     } else if (toleaf== inter1[numLeaf1-1]->Next) {
         if (endIndexLeaf1== inter1[numLeaf1-1]->NumOfKeys-1) {
-            NodeDA ** leaves = new NodeDA *[1];
+            auto ** leaves = new NodeDA *[1];
             leaves[0] = toleaf;
             SwapRangesAdjacent(inter1, leaves, numLeaf1, 1, startIndexLeaf1, endIndexLeaf1, 0, toindex-1);
             delete []leaves;
         } else {
-            NodeDA ** leaves = new NodeDA *[2];
+            auto ** leaves = new NodeDA *[2];
             leaves[0] = inter1[numLeaf1-1];
             leaves[1] = toleaf;
             swapHeadTailLen2Is2(inter1, leaves, numLeaf1, 2, startIndexLeaf1, endIndexLeaf1, endIndexLeaf1+1, toindex-1);
@@ -5435,12 +5500,12 @@ void DynamicArray::RealMove(int startIndexLeaf1, int endIndexLeaf1, NodeDA ** in
         }
     } else if (toleaf->Next == inter1[0]) {
         if (startIndexLeaf1==0) {
-            NodeDA ** leaves = new NodeDA *[1];
+            auto ** leaves = new NodeDA *[1];
             leaves[0] = toleaf;
             SwapRangesAdjacent(leaves, inter1, 1, numLeaf1, toindex, toleaf->NumOfKeys-1, startIndexLeaf1, endIndexLeaf1);
             delete []leaves;
         } else {
-            NodeDA ** leaves = new NodeDA *[2];
+            auto ** leaves = new NodeDA *[2];
             leaves[0] = toleaf;
             leaves[1] = inter1[0];
             swapHeadTailLen1Is2(leaves, inter1, 2, numLeaf1, toindex, startIndexLeaf1-1, startIndexLeaf1, endIndexLeaf1);
@@ -5501,7 +5566,7 @@ void DynamicArray::Move1(NodeDA ** inter1, int numLeaf1, int startIndexLeaf1, in
 
     int numKeysBefore = inter1[0]->NumOfKeys - startIndexLeaf1;
     int * KeysBefore = new int[numKeysBefore];
-    NodeDA ** PointersBefore = new NodeDA *[numKeysBefore];
+    auto ** PointersBefore = new NodeDA *[numKeysBefore];
     for (int i = 0; i < numKeysBefore; i ++) {
         KeysBefore[i] = inter1[0]->Keys[startIndexLeaf1+i];
         PointersBefore[i] = inter1[0]->Pointers[startIndexLeaf1+i];
@@ -5509,7 +5574,7 @@ void DynamicArray::Move1(NodeDA ** inter1, int numLeaf1, int startIndexLeaf1, in
 
     int numKeysAfter = endIndexLeaf1+1 + toleaf->NumOfKeys - toindex;
     int * KeysAfter = new int[numKeysAfter];// make([]int, numKeysAfter);
-    NodeDA ** PointersAfter = new NodeDA *[numKeysAfter];
+    auto ** PointersAfter = new NodeDA *[numKeysAfter];
     int afterIdx = 0;
     for (int i = 0; i < endIndexLeaf1+1; i ++) {
         KeysAfter[i] = inter1[numLeaf1-1]->Keys[i];
@@ -5555,7 +5620,7 @@ void DynamicArray::MoveWhenLenIs1(NodeDA ** inter1, int numLeaf1, int startIndex
     if (fromLeaf != toleaf) {
         int NumKeys = endIndexLeaf1-startIndexLeaf1+1;
         int * Keys = new int[NumKeys];// make([]int, NumKeys)
-        NodeDA ** Pointers = new NodeDA * [NumKeys];
+        auto ** Pointers = new NodeDA * [NumKeys];
         //Pointers = make([]interface{}, NumKeys)
         for (int i = startIndexLeaf1; i <= endIndexLeaf1; i ++) {
             Keys[i-startIndexLeaf1] = fromLeaf->Keys[i];
@@ -5601,7 +5666,7 @@ void DynamicArray::MoveWhenLenIs2(NodeDA ** inter1, int numLeaf1, int startIndex
         int NumKeys = endIndexLeaf1 + 1 + fromLeaf1->NumOfKeys - startIndexLeaf1;
         int * Keys = new int[NumKeys];// make([]int, NumKeys)
         int ik = 0;
-        NodeDA ** Pointers = new NodeDA *[NumKeys];
+        auto ** Pointers = new NodeDA *[NumKeys];
         for (int i = startIndexLeaf1; i < fromLeaf1->NumOfKeys; i ++) {
             Keys[ik] = fromLeaf1->Keys[i];
             Pointers[ik] = fromLeaf1->Pointers[i];
