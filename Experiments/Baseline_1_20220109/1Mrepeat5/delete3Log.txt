@@ -1,2 +1,0 @@
-lt = 0
-da depth = 1
