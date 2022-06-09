@@ -86,3 +86,7 @@ SA 6800  VEC  7100
 lt= 69999 ll length = 10000229
 SA 7800  VEC  7200
 lt= 79999 ll length = 10000199
+SA 6400  VEC  7000
+lt= 89999 ll length = 10000180
+SA 7000  VEC  6400
+lt= 99999 ll length = 10000000
