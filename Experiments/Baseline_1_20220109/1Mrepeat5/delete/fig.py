@@ -18,7 +18,7 @@ line_style = ['o-', 's--', '^:', '-.p', 'h-', 'D--']
 color = ['C5', 'C1', 'C2', 'C3', 'C4', 'C0']
 plt_title = ["BlueNile", "COMPAS", "Credit Card"]
 
-label = ["ADA", "SA", "LL", "CBT", "TV", "VEC"]
+label = ["ADA", "SA", "LL", "TV", "VEC", "CBT"]
 line_width = 8
 marker_size = 15
 # f_size = (14, 10)
@@ -61,7 +61,7 @@ for line in Lines:
 
     items = line.strip().split(',')
     x_list.append(float(items[0]))
-    for i in range(0, 6):
+    for i in range(0, 5):
         execution_time[i].append(float(items[i+1]))
     # execution_time1.append(float(items[1]))
     # execution_time2.append(float(items[2]))
@@ -74,7 +74,7 @@ for line in Lines:
 
 
 fig, ax = plt.subplots(1, 1, figsize=f_size)
-for i in range(0, 6):
+for i in range(0, 5):
     plt.plot(x_list, execution_time[i], color=color[i], label=label[i], linewidth=line_width,
              markersize=marker_size)
 
