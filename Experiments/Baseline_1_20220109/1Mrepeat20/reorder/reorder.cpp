@@ -197,7 +197,6 @@ int main(int argc, char** argv) {
     //random_shuffle(&a[0], &a[MoveActions+SwapActions+ReorderActions]);
     //random_shuffle(&a[0], &a[operations]);
     //int * shortqueryrange = RangeDistributionRandom(, 1, 100);
-    int ir = 0;
 
     TimeVar time1, time2;
 
@@ -261,7 +260,6 @@ int main(int argc, char** argv) {
             case 4: //reorder
             {
                 int len = reorderLength;
-                ir++;
                 if (len >= NowTotalNum) {
                     len = NowTotalNum-1;
                 }
