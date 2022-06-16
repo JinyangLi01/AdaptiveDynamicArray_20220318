@@ -64,7 +64,6 @@ void readCSV(int i, const char * name) {
     fi.close();
 }
 
-
 int main(int argc, char** argv) {
     readColNumTitle(1, argv[1]);
     for (int i = 1; i <= 5; ++i) {
