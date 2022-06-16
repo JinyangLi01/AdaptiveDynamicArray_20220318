@@ -181,7 +181,7 @@ int main(int argc, char** argv) {
         ua++;
     }
 
-    //shuffle(a, a + TotalActions, generator());
+    shuffle(a, a + TotalActions, generator());
     //random_shuffle(&a[DeleteActions+InsertActions], &a[TotalActions]);
     //random_shuffle(&a[0], &a[MoveActions+SwapActions+ReorderActions]);
     //random_shuffle(&a[0], &a[operations]);
