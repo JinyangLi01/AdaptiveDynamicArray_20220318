@@ -173,7 +173,7 @@ int main(int argc, char** argv) {
 //    ofstream finstant, flog, ffinal;
 //    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
 //    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
-    finstant<<" ,DA,SA,LL,CBT,TV,VEC"<<endl;
+    finstant<<" ,DA,SA,LL,TV,VEC"<<endl;
 
     int iniNum = 100000;
     int danodesize = 20;
