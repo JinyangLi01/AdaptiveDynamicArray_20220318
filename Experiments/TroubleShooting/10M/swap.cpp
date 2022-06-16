@@ -3,11 +3,11 @@
 #include <chrono>
 #include <random>
 #include <algorithm>
-#include "../../../../DataStructures/CountedBtree.h"
-#include "../../../../DataStructures/StandardArray.h"
-#include "../../../../DataStructures/DynamicArray.h"
-#include "../../../../DataStructures/LinkedList.h"
-#include "../../../../DataStructures/tiered-vector.h"
+#include "../../../DataStructures/CountedBtree.h"
+#include "../../../DataStructures/StandardArray.h"
+#include "../../../DataStructures/DynamicArray.h"
+#include "../../../DataStructures/LinkedList.h"
+#include "../../../DataStructures/tiered-vector.h"
 #include <vector>
 using namespace std;
 using namespace Seq;
