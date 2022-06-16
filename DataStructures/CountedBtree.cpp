@@ -24,6 +24,7 @@ NodeForCBT::NodeForCBT(int capacity, int numkeys, NodeForCBT * parent, bool isLe
     IsLeaf = isLeaf;
 }
 
+
 void CountedBtree::PrintTree() const {
     printf("\n");
     int numInLevel = 0;
@@ -466,6 +467,7 @@ int CountedBtree::getRightNeighborIndex(NodeForCBT * n) {
 //    }
 //    return n;
 //}
+
 /*
 void CountedBtree::adjustRoot(){
     NodeForCBT *  new_root = nullptr;
@@ -510,6 +512,7 @@ void CountedBtree::coalesceLeafForCBTs(NodeForCBT * n, NodeForCBT * neighbour, i
     parent->KeysNumInChild[neighbour_index] = ComputeNumItems(neighbour); //neighbour->NumOfKeys
 
     DeleteFromNodeForCBT(n->Parent, neighbour_index);
+    delete n;
 }
 
 void CountedBtree::coalesceNodeForCBTs(NodeForCBT * n, NodeForCBT * neighbour, int neighbour_index, int flag) {
@@ -546,6 +549,7 @@ void CountedBtree::coalesceNodeForCBTs(NodeForCBT * n, NodeForCBT * neighbour, i
     parent->KeysNumInChild[neighbour_index] = ComputeNumItems(neighbour); //neighbour->NumOfKeys
 
     DeleteFromNodeForCBT(n->Parent, neighbour_index);
+    delete n;
 }
 
 int CountedBtree::getIndexInParent(NodeForCBT * n) {
@@ -847,14 +851,14 @@ NodeForCBT * CountedBtree::FindNodeForCBT(int pos, int * index) const {
     return c;
 }
 
-void CountedBtree::Exchange(int a, int b) const {
-    int idx1 = -1, idx2 = -1;
-    NodeForCBT * n1 = FindNodeForCBT(a, &idx1);
-    NodeForCBT * n2 = FindNodeForCBT(b, &idx2);
-    int tmp = n1->Keys[idx1];
-    n1->Keys[idx1] = n2->Keys[idx2];
-    n2->Keys[idx2] = tmp;
-}
+//void CountedBtree::Exchange(int a, int b) const {
+//    int idx1 = -1, idx2 = -1;
+//    NodeForCBT * n1 = FindNodeForCBT(a, &idx1);
+//    NodeForCBT * n2 = FindNodeForCBT(b, &idx2);
+//    int tmp = n1->Keys[idx1];
+//    n1->Keys[idx1] = n2->Keys[idx2];
+//    n2->Keys[idx2] = tmp;
+//}
 
 void CountedBtree::Move(int start, int end, int des) {
     if (des > NumKeys) {
@@ -914,7 +918,6 @@ void CountedBtree::Delete(int rank) {
             c = c->Pointers[c->NumOfKeys];
         }
     }
-
     DeleteFromLeafForCBT(c, p-1);
 }
 
