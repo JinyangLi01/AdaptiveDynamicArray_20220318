@@ -445,27 +445,27 @@ int CountedBtree::getRightNeighborIndex(NodeForCBT * n) {
     return -1;
 }
 
-NodeForCBT * CountedBtree::removeEntryFromNodeForCBT(NodeForCBT * n, int indexInNodeForCBT) const {
-    n->KeysNumInChild[indexInNodeForCBT] = 0;
-    if (n->Pointers[indexInNodeForCBT] != nullptr) {
-        NodeForCBT * deleted = n->Pointers[indexInNodeForCBT];
-        deleted->Parent = nullptr;
-        n->Pointers[indexInNodeForCBT] = nullptr;
-    }
-    int j = indexInNodeForCBT;
-    for (int i = j + 1; i < Capacity; i++) {
-        if (n->KeysNumInChild[i] != 0) {
-            n->KeysNumInChild[j] = n->KeysNumInChild[i];
-            n->Pointers[j] = n->Pointers[i];
-            n->KeysNumInChild[i] = 0;
-            n->Pointers[i] = nullptr;
-            j++;
-        } else {
-            break;
-        }
-    }
-    return n;
-}
+//NodeForCBT * CountedBtree::removeEntryFromNodeForCBT(NodeForCBT * n, int indexInNodeForCBT) const {
+//    n->KeysNumInChild[indexInNodeForCBT] = 0;
+//    if (n->Pointers[indexInNodeForCBT] != nullptr) {
+//        NodeForCBT * deleted = n->Pointers[indexInNodeForCBT];
+//        deleted->Parent = nullptr;
+//        n->Pointers[indexInNodeForCBT] = nullptr;
+//    }
+//    int j = indexInNodeForCBT;
+//    for (int i = j + 1; i < Capacity; i++) {
+//        if (n->KeysNumInChild[i] != 0) {
+//            n->KeysNumInChild[j] = n->KeysNumInChild[i];
+//            n->Pointers[j] = n->Pointers[i];
+//            n->KeysNumInChild[i] = 0;
+//            n->Pointers[i] = nullptr;
+//            j++;
+//        } else {
+//            break;
+//        }
+//    }
+//    return n;
+//}
 /*
 void CountedBtree::adjustRoot(){
     NodeForCBT *  new_root = nullptr;
