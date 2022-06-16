@@ -136,7 +136,6 @@ int * SARangeQuery(int * & array, int start, int end) {
 
 
 
-
 int main(int argc, char** argv) {
     string filepath[3];
     filepath[0] = argv[1];
@@ -193,6 +192,8 @@ int main(int argc, char** argv) {
     //random_shuffle(&a[0], &a[MoveActions+SwapActions+ReorderActions]);
     //random_shuffle(&a[0], &a[operations]);
     //int * shortqueryrange = RangeDistributionRandom(, 1, 100);
+    int ir = 0;
+
     TimeVar time1, time2;
 
     int NowTotalNum = iniNum;
@@ -202,7 +203,8 @@ int main(int argc, char** argv) {
         array[i] = i+1;
     }
     DynamicArray *da = NewDynamicArray(array, iniNum, danodesize);
-    // StandardArray *sa = NewStandardArray(array, iniNum);
+    //StandardArray *sa = NewStandardArray(array, iniNum);
+
     int * standard_array = new int[iniNum];
     copy(array, array + iniNum, standard_array);
     CountedBtree * cbt = NewCBTreeForArray(CbtOrder, iniNum);
@@ -258,6 +260,7 @@ int main(int argc, char** argv) {
             case 4: //reorder
             {
                 int len = reorderLength;
+                ir++;
                 if (len >= NowTotalNum) {
                     len = NowTotalNum-1;
                 }
@@ -343,7 +346,6 @@ int main(int argc, char** argv) {
             qans6 = cbt->RangeQuery(start1, end1, &num);
             time2 = timeNow();
             Tcbt += duration(time2 - time1);
-            delete []qans6;
 
             time1 = timeNow();
             qans4 = tiered.RangeQuery(start1, end1, num);

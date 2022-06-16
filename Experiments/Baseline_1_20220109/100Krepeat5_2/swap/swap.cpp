@@ -132,7 +132,6 @@ int * SARangeQuery(int * & array, int start, int end) {
 }
 
 
-
 int main(int argc, char** argv) {
     string filepath[3];
     filepath[0] = argv[1];
@@ -141,7 +140,7 @@ int main(int argc, char** argv) {
     finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
     flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
-//    filepath[0] = "instant.txt";
+//    filepath[0] = "instant.csv";
 //    filepath[1] = "log.txt";
 //    ofstream finstant, flog, ffinal;
 //    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
@@ -184,7 +183,7 @@ int main(int argc, char** argv) {
         ua++;
     }
 
-    //shuffle(a, a + TotalActions, generator());
+    shuffle(a, a + TotalActions, generator());
     //random_shuffle(&a[DeleteActions+InsertActions], &a[TotalActions]);
     //random_shuffle(&a[0], &a[MoveActions+SwapActions+ReorderActions]);
     //random_shuffle(&a[0], &a[operations]);
@@ -200,9 +199,11 @@ int main(int argc, char** argv) {
         array[i] = i+1;
     }
     DynamicArray *da = NewDynamicArray(array, iniNum, danodesize);
-    CountedBtree * cbt = NewCBTreeForArray(CbtOrder, iniNum);
+    //StandardArray *sa = NewStandardArray(array, iniNum);
+
     int * standard_array = new int[iniNum];
     copy(array, array + iniNum, standard_array);
+    CountedBtree * cbt = NewCBTreeForArray(CbtOrder, iniNum);
     int length_SA = iniNum;
     LinkedList * ll = NewLinkedListForArray(m, array, iniNum);
     Seq::Tiered<int, LayerItr<LayerEnd, Layer<101, Layer<101, Layer<101>>>>> tiered;
@@ -225,7 +226,6 @@ int main(int argc, char** argv) {
             depth++;
             flog<<"numUpdate = "<<numUpdate<<" da depth = "<<depth<<endl;
         }
-//        printf("a[%d]=%d\n", lt, a[lt]);
         switch (a[lt]) {
 
             case 2: //insert
@@ -256,6 +256,7 @@ int main(int argc, char** argv) {
             case 4: //reorder
             {
                 int len = reorderLength;
+                ir++;
                 if (len >= NowTotalNum) {
                     len = NowTotalNum-1;
                 }
@@ -316,7 +317,7 @@ int main(int argc, char** argv) {
             finstant << fl << ",";
 
             int pos = RandomInt(1, NowTotalNum);
-            int start1 = 30000, end1 = 100000, start2 = 450000, end2 = 820000;
+            int start1 = 3000, end1 = 10000, start2 = 45000, end2 = 82000;
 
             time1 = timeNow();
             SASwap(standard_array, start1, end1, start2, end2, NowTotalNum);
