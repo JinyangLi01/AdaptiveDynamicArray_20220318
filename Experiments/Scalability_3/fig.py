@@ -64,7 +64,7 @@ def read_files(op):
             time1M[float(items[0])].append(float(items[i+1]))
     # 10M
     input_folder = r"10M"
-    input_path = input_folder + "/" + op + "/" + op + "1.csv"
+    input_path = input_folder + "/" + op + "/" + "avg.csv"
     input_file = open(input_path, "r")
     Lines = input_file.readlines()
     count = 0
@@ -80,8 +80,8 @@ def read_files(op):
             time10M[float(items[0])].append(float(items[i+1]))
 
     # 100K
-    input_folder = r"100K/old_exp"
-    input_path = input_folder + "/" + op + ".csv"
+    input_folder = r"100K"
+    input_path = input_folder + "/" + op + "/" + "avg.csv"
     input_file = open(input_path, "r")
     Lines = input_file.readlines()
     count = 0
@@ -97,11 +97,11 @@ def read_files(op):
             time100K[float(items[0])].append(float(items[i+1]))
 
 
-op = "swap"
+op = "delete"
 read_files(op)
 print(time1M, time100K, time10M)
 
-percen = [0.01, 0.1, 0.15]
+percen = [0.001, 0.01, 0.1]
 
 fig, ax = plt.subplots(1, 1, figsize=f_size)
 for d in range(0, 5):
