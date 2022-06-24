@@ -1,8 +1,8 @@
 #!/bin/sh
 make
-./query/query query/query11.csv query/query11Log.txt
-./query/query query/query12.csv query/query12Log.txt
-./query/query query/query13.csv query/query13Log.txt
-./query/query query/query14.csv query/query14Log.txt
-./query/query query/query15.csv query/query15Log.txt
+./query/query query/query6.csv query/query6Log.txt
+./query/query query/query7.csv query/query7Log.txt
+./query/query query/query8.csv query/query8Log.txt
+./query/query query/query9.csv query/query9Log.txt
+./query/query query/query10.csv query/query10Log.txt
 ./query/average query
