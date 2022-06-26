@@ -70,13 +70,14 @@ int main(int argc, char** argv) {
     for (int i = 1; i <= 20; ++i) {
         readCSV(i, argv[1]);
     }
+    int average_out_of = 20;
     ofstream fout;
     fout.open("avg.csv", ios::out | ios::in | ios::trunc);
     fout << title << endl;
     for (int k = 0; k < rowNum; ++k) {
         fout<<proportion[k]<<",";
         for (int j = 1; j < colNum; ++j) {
-            T[k][j] /= 10;
+            T[k][j] /= average_out_of;
             fout<<T[k][j]<<",";
         }
         fout <<endl;
