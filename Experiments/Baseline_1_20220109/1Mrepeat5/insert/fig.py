@@ -94,7 +94,7 @@ ax.set_xlabel(" \% ")
 # ax.xaxis.set_major_formatter(FuncFormatter(hundreds_formatter))
 plt.ylabel('µs')
 plt.yscale('log')
-plt.yticks(ticks=[100, 1000, 10000, 100000])
+# plt.yticks(ticks=[100, 1000, 10000, 100000])
 plt.legend(loc="upper center", bbox_to_anchor=(0.5, 1.15), ncol=6, fontsize=22)
 
 plt.grid(True)

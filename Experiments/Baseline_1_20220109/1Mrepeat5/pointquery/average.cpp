@@ -67,7 +67,8 @@ void readCSV(int i, const char * name) {
 
 int main(int argc, char** argv) {
     readColNumTitle(1, argv[1]);
-    for (int i = 1; i <= 5; ++i) {
+    int average_out_of = 5;
+    for (int i = 1; i <= average_out_of; ++i) {
         readCSV(i, argv[1]);
     }
     ofstream fout;
@@ -76,7 +77,7 @@ int main(int argc, char** argv) {
     for (int k = 0; k < rowNum; ++k) {
         fout<<proportion[k]<<",";
         for (int j = 1; j < colNum; ++j) {
-            T[k][j] /= 10;
+            T[k][j] /= average_out_of;
             fout<<T[k][j]<<",";
         }
         fout <<endl;
