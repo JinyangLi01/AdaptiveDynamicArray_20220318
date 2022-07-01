@@ -65,15 +65,13 @@ void readCSV(int i, const char * name) {
 }
 
 
+
 int main(int argc, char** argv) {
     readColNumTitle(1, argv[1]);
-    for (int i = 1; i <= 5; ++i) {
+    int average_out_of = 20;
+    for (int i = 1; i <= average_out_of; ++i) {
         readCSV(i, argv[1]);
     }
-    for (int i = 11; i <= 15; ++i) {
-        readCSV(i, argv[1]);
-    }
-    int average_out_of = 10;
     ofstream fout;
     fout.open("avg.csv", ios::out | ios::in | ios::trunc);
     fout << title << endl;
