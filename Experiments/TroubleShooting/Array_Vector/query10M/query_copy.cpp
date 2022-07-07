@@ -210,11 +210,11 @@ int main(int argc, char** argv) {
     // finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
     // flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
-   filepath[0] = "query_copy.csv";
-   filepath[1] = "query_copyLog.txt";
-   ofstream finstant, flog, ffinal;
-   finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
-   flog.open(filepath[1], ios::out | ios::in | ios::trunc);
+    filepath[0] = "query_copy.csv";
+    filepath[1] = "query_copyLog.txt";
+    ofstream finstant, flog, ffinal;
+    finstant.open(filepath[0], ios::out | ios::in | ios::trunc);
+    flog.open(filepath[1], ios::out | ios::in | ios::trunc);
 
     finstant<<" ,DA,SA,LL,TV,VEC"<<endl;
 
