@@ -47,7 +47,7 @@ operations = ["delete", "insert", "pointquery", "query", "reorder", "swap"]
 
 def read_files(op):
     # 1M
-    input_folder = r"1M"
+    input_folder = r"1Mrepeat5"
     input_path = input_folder + "/" + op + "/" + "avg.csv"
     input_file = open(input_path, "r")
     Lines = input_file.readlines()
@@ -63,7 +63,7 @@ def read_files(op):
         for i in range(0, 5):
             time1M[float(items[0])].append(float(items[i+1]))
     # 10M
-    input_folder = r"10M"
+    input_folder = r"10Mrepeat5"
     input_path = input_folder + "/" + op + "/" + "avg.csv"
     input_file = open(input_path, "r")
     Lines = input_file.readlines()
@@ -80,7 +80,7 @@ def read_files(op):
             time10M[float(items[0])].append(float(items[i+1]))
 
     # 100K
-    input_folder = r"100K"
+    input_folder = r"100Krepeat5"
     input_path = input_folder + "/" + op + "/" + "avg.csv"
     input_file = open(input_path, "r")
     Lines = input_file.readlines()
@@ -97,7 +97,7 @@ def read_files(op):
             time100K[float(items[0])].append(float(items[i+1]))
 
 
-op = "delete"
+op = "swap"
 read_files(op)
 print(time1M, time100K, time10M)
 
