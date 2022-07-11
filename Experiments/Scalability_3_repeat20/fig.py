@@ -80,7 +80,7 @@ def read_files(op):
             time10M[float(items[0])].append(float(items[i+1]))
 
     # 100K
-    input_folder = r"../Scalability_3_repeat5/100Krepeat5"
+    input_folder = r"100Krepeat20"
     # input_folder = r"100Krepeat20"
     input_path = input_folder + "/" + op + "/" + "avg.csv"
     input_file = open(input_path, "r")
@@ -98,7 +98,7 @@ def read_files(op):
             time100K[float(items[0])].append(float(items[i+1]))
 
 
-op = "pointquery"
+op = "swap"
 read_files(op)
 print(time1M, time100K, time10M)
 
