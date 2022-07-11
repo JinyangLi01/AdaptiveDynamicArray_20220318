@@ -64,7 +64,6 @@ void readCSV(int i, const char * name) {
     fi.close();
 }
 
-
 int main(int argc, char** argv) {
     readColNumTitle(1, argv[1]);
     int average_out_of = 20;
