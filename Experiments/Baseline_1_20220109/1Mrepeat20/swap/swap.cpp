@@ -311,7 +311,7 @@ int main(int argc, char** argv) {
             finstant << fl << ",";
 
             int pos = RandomInt(1, NowTotalNum);
-            int start1 = 30000, end1 = 100000, start2 = 450000, end2 = 820000;
+            int start1 = 3000, end1 = 10000, start2 = 45000, end2 = 82000;
 
             time1 = timeNow();
             SASwap(standard_array, start1, end1, start2, end2, NowTotalNum);
