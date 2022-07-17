@@ -96,7 +96,7 @@ string RandomString(const int len) {
     return s;
 }
 const int operations = 100000;
-const int iniNum = 100000; //0.03 = 30000
+const int iniNum = 100000;
 const int danodesize = 50;
 int TinsertIdx = 0, TdeleteIdx = 0;
 long long TinsertDB[operations+1000], TdeleteDB[operations+1000],
